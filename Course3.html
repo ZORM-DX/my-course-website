@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>المشروع الثاني: التذاكر والانذارات</title>
+ <link rel="icon" type="image/png" href="UQULOGO.png">
+  <!-- CSS FILE (THIS WAS MISSING) -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<!-- Article content hidden in HTML -->
+
+<a href="Homepage.html" class="back-button">← العودة للصفحة الرئيسية</a>
+
+<div class="layout">
+
+ <!-- VIDEO SECTION -->
+<div class="video-area">
+  <div class="video-placeholder" id="videoContainer">
+    اختر درسًا لبدء المشاهدة
+  </div>
+</div>
+
+
+  <!-- SIDEBAR -->
+ <div class="sidebar">
+  <button class="accordion">📘 مقدمة</button>
+<div class="panel">
+  <a href="#" class="video-link" data-video="Videos1.mp4">
+   مقدمة المشروع الثالث
+  </a>
+
+  <a href="#" class="video-link" data-video="Videos2.mp4">
+   اختبار عملي للمشروع الثالث
+  </a>
+
+</div>
+
+
+ <button class="accordion">🛠 شرح تفصيلي للمشروع</button>
+<div class="panel">
+
+  <a href="#" class="video-link" data-video="Videos3.mp4">
+	شرح جداول الخدمة
+  </a>
+
+<a href="#" class="video-link" data-video="Videos4.mp4">
+	شرح الصفحات البسيطة مع فلترة القوائم المنسدله	
+  </a>
+
+<a href="#" class="video-link" data-article="codes-article">
+   مقالات صفحات الخدمة
+</a>
+
+
+<a href="#" class="video-link" data-video="Videos5.mp4">
+	شرح صفحة الخدمات مع الصفحات الجانبية
+  </a>
+
+
+<template id="codes-article">
+  <div dir="rtl" class="article-content">
+     
+	<h2>شرح اكواد صفحات الخدمة</h2>
+
+    <h3>الكود الكامل لصفحة الاقسام:</h3>
+    <pre dir= "ltr">
+
+Option Compare Database
+
+
+
+Private Sub EnterButton_Click()
+
+    Dim DepName As String
+    Dim Officer As String
+    Dim existingRecord As Variant
+    Dim sql As String
+
+    DepName = Nz(Me.Namebox.Value, "")
+    Officer = Nz(Me.[ÖÇÈØ ÇáÇÊÕÇá].Value, "")
+
+    ' Validate: Name is required
+    If DepName = "" Then
+        MsgBox "Please enter the Department Name.", vbExclamation, "Missing Information"
+        Exit Sub
+    End If
+
+    ' Check if the department name already exists
+    existingRecord = DLookup("Dep_Name", "Department", "Dep_Name='" & Replace(DepName, "'", "''") & "'")
+
+    If Not IsNull(existingRecord) Then
+        ' === Record exists ? Update ===
+        sql = "UPDATE Department SET " & _
+              "[ÖÇÈØ ÇáÇÊÕÇá] = '" & Replace(Officer, "'", "''") & "' " & _
+              "WHERE Dep_Name = '" & Replace(DepName, "'", "''") & "';"
+
+        DoCmd.SetWarnings False
+        DoCmd.RunSQL sql
+        DoCmd.SetWarnings True
+
+        MsgBox "Department updated successfully.", vbInformation, "Updated"
+
+    Else
+        ' === Record does NOT exist ? Insert ===
+        sql = "INSERT INTO Department (Dep_Name, [ÖÇÈØ ÇáÇÊÕÇá]) " & _
+              "VALUES ('" & Replace(DepName, "'", "''") & "', '" & Replace(Officer, "'", "''") & "');"
+
+        DoCmd.SetWarnings False
+        DoCmd.RunSQL sql
+        DoCmd.SetWarnings True
+
+        MsgBox "New department added successfully.", vbInformation, "Added"
+    End If
+    
+    Me.Namebox = ""
+    Me.ÖÇÈØ_ÇáÇÊÕÇá = ""
+    
+End Sub
+
+    </pre>
+
+<p><strong>شرح الكود للمبتدئين:</strong></p>
+
+<p>هذا الكود مكتوب بلغة <strong>VBA داخل قاعدة بيانات Access</strong>، والغرض منه هو إدارة وإضافة أو تحديث أقسام (Departments) بطريقة سهلة ومرنة. حتى لو لم يكن لديك أي خبرة برمجية، سأشرح لك <strong>ما يقوم به كل جزء بطريقة بسيطة</strong>:</p>
+
+<h3>1️⃣ الزر EnterButton_Click</h3>
+<p>
+عند الضغط على زر <strong>إدخال</strong>:
+<ul>
+  <li>يأخذ اسم القسم الذي كتبه المستخدم من الحقل <code>Namebox</code>.</li>
+  <li>يأخذ اسم المسؤول من الحقل <code>Dep_Name</code>.</li>
+  <li>يتأكد أن اسم القسم ليس فارغًا، وإذا كان فارغًا يظهر رسالة تنبيه ويوقف العملية.</li>
+  <li>يتحقق إذا كان القسم موجودًا بالفعل في جدول <strong>Department</strong>:</li>
+    <ul>
+      <li>إذا وجد القسم: يقوم بتحديث اسم المسؤول في نفس السجل.</li>
+      <li>إذا لم يوجد القسم: يقوم بإضافة قسم جديد مع اسم المسؤول.</li>
+  </ul>
+  <li>بعد الإضافة أو التحديث، تظهر رسالة نجاح، وتُفرغ الحقول لإدخال بيانات جديدة.</li>
+</ul>
+</p>
+
+<h3>🛠 أجزاء يمكنك تعديلها بأمان</h3>
+<p>
+هذه أشياء يمكن لأي مبتدئ تعديلها دون كسر النظام:
+<br>
+1. نص الرسائل التي تظهر للمستخدم مثل <code>MsgBox "New department added successfully."</code> أو <code>MsgBox "Please enter the Department Name."</code>.<br>
+2. أسماء الحقول في النموذج إذا قررت تغيير اسم الحقل <code>Namebox</code> أو <code>ÖÇÈØ ÇáÇÊÕÇá</code> (تأكد من تحديثها في كل مكان في الكود).<br>
+3. اسم الجدول <code>Department</code> إذا كان جدولك يحمل اسمًا مختلفًا.<br>
+4. يمكنك تعديل الحقول التي تُدرج أو تُحدث في الجدول، مثل إضافة حقل جديد للقسم أو المسؤول. 
+</p>
+
+ <h3>الكود الكامل لصفحة دليل المستخدم</h3>
+    <pre dir= "ltr">
+Option Compare Database
+
+Private Sub Depc3_AfterUpdate()
+Me.Mainc.Requery
+Me.Subc.Requery
+
+End Sub
+
+Private Sub EnterBut3_Click()
+
+    CurrentDb.Execute _
+        "INSERT INTO Guides " & _
+        "([Dep_Name], [Dep_Code], [Ser_Name], [Ser_Code], [Sub_Name], [Sub_ID], " & _
+        "[عنوان الدليل], [الاصدار], [معد الدليل]) " & _
+        "VALUES ('" & Me.Depc3.Column(1) & "', " & Me.Depc3.Value & ", '" & _
+                       Me.Mainc.Column(1) & "', " & Me.Mainc.Value & ", '" & _
+                       Me.Subc.Column(1) & "', " & Me.Subc.Value & ", '" & _
+                       Me.[عنوان الدليل].Value & "', '" & _
+                       Me.[الاصدار].Value & "', '" & _
+                       Me.[معد الدليل].Value & "');"
+
+    MsgBox "Saved to Guides", vbInformation
+
+End Sub
+
+
+
+Private Sub Form_Current()
+Me.Mainc.Requery
+Me.Subc.Requery
+
+End Sub
+
+Private Sub Mainc_AfterUpdate()
+Me.Subc.Requery
+
+End Sub
+
+    </pre>
+  
+  <p><strong>شرح الكود للمبتدئين:</strong></p>
+
+<p>هذا الكود مكتوب بلغة <strong>VBA داخل قاعدة بيانات Access</strong>، والغرض منه هو إدارة البيانات في نموذج (Form) بطريقة منظمة وإضافة سجلات إلى جدول <strong>Guides</strong> بناءً على الأقسام والخدمات والفرعيات.</p>
+
+<h3>1️⃣ Depc3_AfterUpdate</h3>
+<p>
+عند تغيير قيمة القائمة المنسدلة <strong>Depc3</strong> (القسم):
+<ul>
+  <li>يقوم الكود بإعادة تحميل القوائم <strong>Mainc</strong> و <strong>Subc</strong> بحيث تتوافق مع القسم المختار.</li>
+  <li>هذا يضمن أن القوائم الأخرى تعرض الخيارات الصحيحة فقط.</li>
+</ul>
+</p>
+
+<h3>2️⃣ Mainc_AfterUpdate</h3>
+<p>
+عند تغيير قيمة القائمة <strong>Mainc</strong> (الخدمة الرئيسية):
+<ul>
+  <li>يتم إعادة تحميل القائمة <strong>Subc</strong> لتظهر الفرعيات المرتبطة بالخدمة المختارة.</li>
+</ul>
+</p>
+
+<h3>3️⃣ Form_Current</h3>
+<p>
+عند فتح أي سجل في النموذج أو التنقل بين السجلات:
+<ul>
+  <li>يتم إعادة تحميل القوائم <strong>Mainc</strong> و <strong>Subc</strong> لضمان توافقها مع بيانات السجل الحالي.</li>
+</ul>
+</p>
+
+<h3>4️⃣ EnterBut3_Click</h3>
+<p>
+عند الضغط على زر <strong>إدخال</strong>:
+<ul>
+  <li>يقوم الكود بأخذ القيم المختارة من القوائم <strong>Depc3</strong>, <strong>Mainc</strong>, <strong>Subc</strong>، وأيضًا القيم من الحقول <strong>ÚäæÇä ÇáÏáíá</strong>, <strong>ÇáÇÕÏÇÑ</strong>, و <strong>ãÚÏ ÇáÏáíá</strong>.</li>
+  <li>يضيف هذه البيانات كصف جديد في جدول <strong>Guides</strong>.</li>
+  <li>بعد الإضافة، يظهر رسالة تأكيد <strong>Saved to Guides</strong>.</li>
+</ul>
+</p>
+
+<h3>🛠 أجزاء يمكنك تعديلها بأمان</h3>
+<p>
+هذه أشياء يمكن لأي مبتدئ تعديلها دون كسر النظام:
+<br>
+1. نص الرسائل التي تظهر بعد الحفظ، مثل <code>MsgBox "Saved to Guides"</code>.<br>
+2. أسماء الحقول في النموذج إذا قمت بتغيير أي اسم حقل، مثل <code>Depc3</code>, <code>Mainc</code>, <code>Subc</code> أو الحقول النصية <code>ÚäæÇä ÇáÏáíá</code>, <code>ÇáÇÕÏÇÑ</code>, <code>ãÚÏ ÇáÏáíá</code>.<br>
+3. أسماء الجدول <code>Guides</code> أو الأعمدة إذا كان لديك أسماء مختلفة في قاعدة البيانات.<br>
+4. يمكنك تعديل الأعمدة التي تُدرج في الجدول أو إضافة حقول جديدة بسهولة طالما أنك حدثت <strong>SQL Insert</strong> بنفس الطريقة.
+</p>
+
+<h3>الكود الكامل لصفحة الخدمات الرئيسية:</h3>
+    <pre dir= "ltr">
+	Option Compare Database
+
+Private Sub EnterButton_Click()
+
+    Dim DepCode As Variant
+    Dim SerName As String
+    Dim sql As String
+
+    ' Get values
+    DepCode = Nz(Me.Depc.Column(0), "")
+    SerName = Nz(Me.Ser_Name.Value, "")
+
+    ' Validate input
+    If DepCode = "" Then
+        MsgBox "Please select a department.", vbExclamation, "Missing Information"
+        Exit Sub
+    End If
+
+    If SerName = "" Then
+        MsgBox "Please enter a service name.", vbExclamation, "Missing Information"
+        Exit Sub
+    End If
+
+    ' Insert into Main_services
+    sql = "INSERT INTO Main_services (Dep_Code, Ser_Name) " & _
+          "VALUES (" & DepCode & ", '" & Replace(SerName, "'", "''") & "');"
+
+    DoCmd.SetWarnings False
+    DoCmd.RunSQL sql
+    DoCmd.SetWarnings True
+
+    MsgBox "Service added successfully.", vbInformation, "Added"
+
+    ' Optional: Clear text box after saving
+    Me.Ser_Name = ""
+
+End Sub
+	</pre>
+<p><strong>شرح الكود للمبتدئين:</strong></p>
+
+<p>هذا الكود مكتوب بلغة <strong>VBA داخل قاعدة بيانات Access</strong>، والغرض منه هو إدارة البيانات في نموذج (Form) بطريقة منظمة وإضافة سجلات إلى جدول <strong>Guides</strong> بناءً على الأقسام والخدمات والفرعيات.</p>
+
+<h3>1️⃣ Depc3_AfterUpdate</h3>
+<p>
+عند تغيير قيمة القائمة المنسدلة <strong>Depc3</strong> (القسم):
+<ul>
+  <li>يقوم الكود بإعادة تحميل القوائم <strong>Mainc</strong> و <strong>Subc</strong> بحيث تتوافق مع القسم المختار.</li>
+  <li>هذا يضمن أن القوائم الأخرى تعرض الخيارات الصحيحة فقط.</li>
+</ul>
+</p>
+
+<h3>2️⃣ Mainc_AfterUpdate</h3>
+<p>
+عند تغيير قيمة القائمة <strong>Mainc</strong> (الخدمة الرئيسية):
+<ul>
+  <li>يتم إعادة تحميل القائمة <strong>Subc</strong> لتظهر الفرعيات المرتبطة بالخدمة المختارة.</li>
+</ul>
+</p>
+
+<h3>3️⃣ Form_Current</h3>
+<p>
+عند فتح أي سجل في النموذج أو التنقل بين السجلات:
+<ul>
+  <li>يتم إعادة تحميل القوائم <strong>Mainc</strong> و <strong>Subc</strong> لضمان توافقها مع بيانات السجل الحالي.</li>
+</ul>
+</p>
+
+<h3>4️⃣ EnterBut3_Click</h3>
+<p>
+عند الضغط على زر <strong>إدخال</strong>:
+<ul>
+  <li>يقوم الكود بأخذ القيم المختارة من القوائم <strong>Depc3</strong>, <strong>Mainc</strong>, <strong>Subc</strong>، وأيضًا القيم من الحقول <strong>ÚäæÇä ÇáÏáíá</strong>, <strong>ÇáÇÕÏÇÑ</strong>, و <strong>ãÚÏ ÇáÏáíá</strong>.</li>
+  <li>يضيف هذه البيانات كصف جديد في جدول <strong>Guides</strong>.</li>
+  <li>بعد الإضافة، يظهر رسالة تأكيد <strong>Saved to Guides</strong>.</li>
+</ul>
+</p>
+
+<h3>🛠 أجزاء يمكنك تعديلها بأمان</h3>
+<p>
+هذه أشياء يمكن لأي مبتدئ تعديلها دون كسر النظام:
+<br>
+1. نص الرسائل التي تظهر بعد الحفظ، مثل <code>MsgBox "Saved to Guides"</code>.<br>
+2. أسماء الحقول في النموذج إذا قمت بتغيير أي اسم حقل، مثل <code>Depc3</code>, <code>Mainc</code>, <code>Subc</code> أو الحقول النصية <code>ÚäæÇä ÇáÏáíá</code>, <code>ÇáÇÕÏÇÑ</code>, <code>ãÚÏ ÇáÏáíá</code>.<br>
+3. أسماء الجدول <code>Guides</code> أو الأعمدة إذا كان لديك أسماء مختلفة في قاعدة البيانات.<br>
+4. يمكنك تعديل الأعمدة التي تُدرج في الجدول أو إضافة حقول جديدة بسهولة طالما أنك حدثت <strong>SQL Insert</strong> بنفس الطريقة.
+</p>
+
+<h3>الكود الكامل لصفحة منشور التواصل الاجتماعي:</h3>
+    <pre dir= "ltr">
+	Option Compare Database
+
+Private Sub Depc2_AfterUpdate()
+Mainc.Requery
+Subc.Requery
+
+ Me.Video_L.Visible = False
+    Me.Image_Q.Visible = False
+    
+End Sub
+
+Private Sub Enterbut2_Click()
+' Safety checks
+    If IsNull(Me.Depc2) Or IsNull(Me.Mainc) Or IsNull(Me.Subc) Then
+        MsgBox "Please select Department, Main Category and Sub Category first.", vbExclamation
+        Exit Sub
+    End If
+
+    ' Insert into Media table
+    CurrentDb.Execute _
+        "INSERT INTO [Media] " & _
+        "([Dep_Name], [Dep_Code], [Ser_Name], [Ser_Code], [Sub_Name], [Sub_ID], " & _
+        "[Title], [Media_Type], [Post_Type], [Video_L], [Image_Q]) " & _
+        "VALUES ('" & Me.Depc2.Column(1) & "', " & Me.Depc2.Value & ", '" & _
+                       Me.Mainc.Column(1) & "', " & Me.Mainc.Value & ", '" & _
+                       Me.Subc.Column(1) & "', " & Me.Subc.Value & ", '" & _
+                       Me.Title & "', '" & Me.Mediac.Column(0) & "', '" & _
+                       Me.PostT.Column(0) & "', '" & Me.Video_L & "', '" & Me.Image_Q & "');"
+
+    MsgBox "Saved to Media", vbInformation
+
+End Sub
+
+Private Sub Form_Current()
+Mainc.Requery
+
+Subc.Requery
+End Sub
+
+Private Sub Mainc_AfterUpdate()
+
+Subc.Requery
+End Sub
+
+Private Sub PostT_AfterUpdate()
+
+    ' Hide both first
+    Me.Video_L.Visible = False
+    Me.Image_Q.Visible = False
+
+    ' Show only the correct textbox
+    Select Case Me.PostT.Value
+        Case "Video"
+            Me.Video_L.Visible = True
+
+        Case "Image"
+            Me.Image_Q.Visible = True
+    End Select
+
+End Sub
+
+	</pre>
+
+<p><strong>شرح الكود للمبتدئين:</strong></p>
+
+<p>هذا الكود مكتوب بلغة <strong>VBA داخل قاعدة بيانات Access</strong>، والغرض منه هو إدارة وإضافة الوسائط (Media) مثل الفيديوهات والصور إلى جدول <strong>Media</strong> بطريقة منظمة بناءً على القسم والخدمة والفرعية.</p>
+
+<h3>1️⃣ Depc2_AfterUpdate</h3>
+<p>
+عند تغيير قيمة القائمة المنسدلة <strong>Depc2</strong> (القسم):
+<ul>
+  <li>يتم إعادة تحميل القوائم <strong>Mainc</strong> و <strong>Subc</strong> لتظهر القيم المرتبطة بالقسم المختار.</li>
+  <li>كما يخفي الكود الحقول <strong>Video_L</strong> و <strong>Image_Q</strong> حتى يتم اختيار نوع المنشور لاحقًا.</li>
+</ul>
+</p>
+
+<h3>2️⃣ Mainc_AfterUpdate</h3>
+<p>
+عند تغيير قيمة القائمة <strong>Mainc</strong> (الخدمة الرئيسية):
+<ul>
+  <li>يتم إعادة تحميل القائمة <strong>Subc</strong> لتظهر الفرعيات المرتبطة بالخدمة.</li>
+</ul>
+</p>
+
+<h3>3️⃣ Form_Current</h3>
+<p>
+عند فتح أي سجل أو التنقل بين السجلات في النموذج:
+<ul>
+  <li>يتم إعادة تحميل القوائم <strong>Mainc</strong> و <strong>Subc</strong> لضمان توافقها مع بيانات السجل الحالي.</li>
+</ul>
+</p>
+
+<h3>4️⃣ PostT_AfterUpdate</h3>
+<p>
+عند اختيار نوع المنشور في القائمة <strong>PostT</strong>:
+<ul>
+  <li>يتم إخفاء جميع الحقول الخاصة بالوسائط أولاً.</li>
+  <li>ثم يُظهر الحقل المناسب فقط حسب نوع المنشور المختار: <strong>Video_L</strong> للفيديو، أو <strong>Image_Q</strong> للصورة.</li>
+</ul>
+</p>
+
+<h3>5️⃣ Enterbut2_Click</h3>
+<p>
+عند الضغط على زر <strong>إدخال</strong>:
+<ul>
+  <li>يتأكد الكود أولاً من أن المستخدم اختار القسم والخدمة والفرعية.</li>
+  <li>يضيف بيانات الوسائط في جدول <strong>Media</strong>، بما في ذلك العنوان، نوع الوسائط، نوع المنشور، ورابط الفيديو أو الصورة.</li>
+  <li>بعد الإضافة، تظهر رسالة تأكيد <strong>Saved to Media</strong>.</li>
+</ul>
+</p>
+
+<h3>🛠 أجزاء يمكنك تعديلها بأمان</h3>
+<p>
+هذه أشياء يمكن لأي مبتدئ تعديلها بأمان:
+<br>
+1. نص الرسائل مثل <code>MsgBox "Saved to Media"</code>.<br>
+2. أسماء الحقول في النموذج إذا قمت بتغيير أي اسم حقل، مثل <code>Depc2</code>, <code>Mainc</code>, <code>Subc</code>, <code>Title</code>, <code>Video_L</code>, <code>Image_Q</code>.<br>
+3. أسماء الجدول <code>Media</code> أو الأعمدة إذا كان لديك أسماء مختلفة في قاعدة البيانات.<br>
+4. أنواع المنشورات في القائمة <code>PostT</code> وإظهار/إخفاء الحقول المناسبة حسب الحاجة.<br>
+5. يمكنك تعديل الأعمدة التي تُدرج في الجدول أو إضافة حقول جديدة بنفس الطريقة طالما حدثت <strong>SQL Insert</strong> بشكل صحيح.
+</p>
+
+<h3>الكود الكامل صفحة سياسة الخدمة:</h3>
+    <pre dir= "ltr">
+	Option Compare Database
+
+Private Sub Customer_statusC_AfterUpdate()
+Me.Customer_categoryC.Requery
+
+End Sub
+
+Private Sub EnterBut_Click()
+
+    Dim fullTimeText As String
+    Dim genderText As String
+
+    ' ===== FullTime logic =====
+    If Me.TimeG.Value = 1 Then     ' optFullTime selected
+        fullTimeText = "1"
+    Else
+        fullTimeText = "0"
+    End If
+
+    ' ===== Gender logic =====
+    If Me.Gender.Value = 1 Then  ' MaleOBT
+        genderText = "ذكر"
+    ElseIf Me.Gender.Value = 2 Then  ' FemaleOBT
+        genderText = "انثى"
+    Else
+        genderText = ""
+    End If
+
+    ' ===== Insert all values into Service policy =====
+    CurrentDb.Execute _
+        "INSERT INTO [Service policy] (Gender, Customer_category, Customer_status, Service_time, From_Time, To_Time, Service_location, Colleges) " & _
+        "VALUES (" & _
+            IIf(IsNull(genderText), "NULL", "'" & genderText & "'") & ", " & _
+            IIf(IsNull(Me.Customer_categoryC.Column(1)), "NULL", "'" & Me.Customer_categoryC.Column(1) & "'") & ", " & _
+            IIf(IsNull(Me.Customer_statusC.Column(1)), "NULL", "'" & Me.Customer_statusC.Column(1) & "'") & ", " & _
+            IIf(IsNull(fullTimeText), "NULL", "'" & fullTimeText & "'") & ", " & _
+            IIf(IsNull(Me.From), "NULL", "'" & Me.From & "'") & ", " & _
+            IIf(IsNull(Me.To), "NULL", "'" & Me.To & "'") & ", " & _
+            IIf(IsNull(Me.Service_locationC.Column(1)), "NULL", "'" & Me.Service_locationC.Column(1) & "'") & ", " & _
+            IIf(IsNull(Me.CollegesC.Column(1)), "NULL", "'" & Me.CollegesC.Column(1) & "'") & _
+        ");"
+
+    MsgBox "Saved!", vbInformation
+
+End Sub
+
+Private Sub Form_AfterUpdate()
+Me.Customer_categoryC.Requery
+
+End Sub
+
+Private Sub From_Time_GotFocus()
+Me.From.Visible = True
+Me.To.Visible = True
+Me.FromL.Visible = True
+Me.ToL.Visible = True
+
+End Sub
+
+
+Private Sub optFullTime_GotFocus()
+Me.From.Visible = False
+Me.To.Visible = False
+Me.FromL.Visible = False
+Me.ToL.Visible = False
+
+End Sub
+
+	</pre>
+
+<p><strong>شرح الكود للمبتدئين:</strong></p>
+
+<p>هذا الكود مكتوب بلغة <strong>VBA داخل قاعدة بيانات Access</strong>، والغرض منه هو إضافة بيانات سياسات الخدمة (Service policy) للعملاء بطريقة منظمة بناءً على الجنس، الحالة، الفئة، الوقت، والموقع.</p>
+
+<h3>1️⃣ Customer_statusC_AfterUpdate</h3>
+<p>
+عند تغيير قيمة القائمة المنسدلة <strong>Customer_statusC</strong> (حالة العميل):
+<ul>
+  <li>يتم إعادة تحميل قائمة <strong>Customer_categoryC</strong> لتظهر الفئات المرتبطة بالحالة المختارة.</li>
+</ul>
+</p>
+
+<h3>2️⃣ Form_AfterUpdate</h3>
+<p>
+عند تحديث أي سجل في النموذج:
+<ul>
+  <li>يتم إعادة تحميل قائمة <strong>Customer_categoryC</strong> لضمان توافقها مع بيانات السجل الحالي.</li>
+</ul>
+</p>
+
+<h3>3️⃣ From_Time_GotFocus</h3>
+<p>
+عند النقر على حقل <strong>From</strong> (وقت البداية):
+<ul>
+  <li>تظهر جميع الحقول المتعلقة بالوقت: <strong>From</strong>, <strong>To</strong>, وملصقاتهم <strong>FromL</strong>, <strong>ToL</strong>.</li>
+</ul>
+</p>
+
+<h3>4️⃣ optFullTime_GotFocus</h3>
+<p>
+عند اختيار خيار الدوام الكامل <strong>optFullTime</strong>:
+<ul>
+  <li>يتم إخفاء جميع الحقول المتعلقة بالوقت، لأنها غير مطلوبة للدوام الكامل.</li>
+</ul>
+</p>
+
+<h3>5️⃣ EnterBut_Click</h3>
+<p>
+عند الضغط على زر <strong>إدخال</strong>:
+<ul>
+  <li>يقوم الكود بتحويل خيارات الدوام والجنس إلى قيم نصية أو رقمية مناسبة.</li>
+  <li>ثم يقوم بإدراج جميع القيم في جدول <strong>Service policy</strong> باستخدام <strong>SQL Insert</strong>.</li>
+  <li>بعد الإدخال، يظهر رسالة تأكيد <strong>Saved!</strong>.</li>
+</ul>
+</p>
+
+<h3>🛠 أجزاء يمكنك تعديلها بأمان</h3>
+<p>
+هذه أشياء يمكن لأي مبتدئ تعديلها بأمان:
+<br>
+1. نص الرسائل مثل <code>MsgBox "Saved!"</code>.<br>
+2. أسماء الحقول في النموذج إذا قمت بتغيير أي اسم حقل، مثل <code>Customer_statusC</code>, <code>Customer_categoryC</code>, <code>From</code>, <code>To</code>, <code>Service_locationC</code>, <code>CollegesC</code>.<br>
+3. أسماء الجدول <code>Service policy</code> أو الأعمدة إذا كان لديك أسماء مختلفة في قاعدة البيانات.<br>
+4. القيم التي يمثلها الدوام أو الجنس (<code>fullTimeText</code> و <code>genderText</code>) يمكن تعديلها لتناسب احتياجاتك.<br>
+5. إضافة أو تعديل أي حقل جديد بنفس طريقة الإدراج في <strong>SQL Insert</strong> طالما حافظت على صيغة SQL صحيحة.
+</p>
+
+<h3>الكود الكامل لصفحة الخدمات الفرعية:</h3>
+    <pre dir= "ltr">
+	Option Compare Database
+
+Private Sub Command11_Click()
+Box32.Visible = Not Me.Box32.Visible
+EnterButton.Visible = Not Me.EnterButton.Visible
+Home.Visible = Not Me.Home.Visible
+
+End Sub
+
+
+
+Private Sub Depc_AfterUpdate()
+Me.Mainc.Requery
+
+End Sub
+
+Private Sub EnterButton_Click()
+
+    If IsNull(Me.Depc) Then
+        MsgBox "Please select a Department.", vbExclamation
+        Exit Sub
+    End If
+    
+    If IsNull(Me.Mainc) Then
+        MsgBox "Please select a Service.", vbExclamation
+        Exit Sub
+    End If
+    
+    If IsNull(Me.Sub_Name) Or Me.Sub_Name = "" Then
+        MsgBox "Please enter a Sub-Service name.", vbExclamation
+        Exit Sub
+    End If
+
+    ' Insert into Sub_services table
+    Dim sql As String
+    sql = "INSERT INTO Sub_services (Dep_Code, Ser_Code, Sub_Name) VALUES (" & _
+          Me.Depc.Column(0) & ", " & Me.Mainc.Column(0) & ", '" & Replace(Me.Sub_Name, "'", "''") & "')"
+
+    DoCmd.SetWarnings False
+    DoCmd.RunSQL sql
+    DoCmd.SetWarnings True
+
+    MsgBox "Sub-Service added successfully.", vbInformation
+
+    ' Optional clear
+    Me.Sub_Name = ""
+    Me.Depc = Null
+    Me.Mainc = Null
+
+End Sub
+
+
+Private Sub Form_Load()
+    Me.Mainc.Requery
+
+    
+ Me.Depc.RowSource = "SELECT Dep_Code, Dep_Name, [ضابط الاتصال] FROM Department ORDER BY Dep_Code;"
+    Me.Depc.ColumnCount = 3
+    Me.Depc.ColumnWidths = "0cm;5cm;6cm"
+
+    Me.Mainc.ColumnCount = 3
+    Me.Mainc.ColumnWidths = "0cm;20cm;2cm"
+End Sub
+
+Private Sub Home_Click()
+
+    Dim Answer As VbMsgBoxResult
+
+    Answer = MsgBox("Are you sure you want to go to the home page?", _
+                    vbYesNo + vbQuestion, "Confirm Navigation")
+
+    If Answer = vbNo Then Exit Sub
+
+    DoCmd.OpenForm "Homepage"
+    DoCmd.Close acForm, "Sub_services"
+    
+
+End Sub
+
+
+Private Sub Mainc_AfterUpdate()
+Dim SerCode As Variant
+    Dim SerName As Variant
+    Dim DepCode As Variant
+
+    SerCode = Me.Mainc.Column(0)     ' Sub_ID
+    SerName = Me.Mainc.Column(1)    ' Sub_Name
+    DepCode = Me.Mainc.Column(2)
+End Sub
+
+	</pre>
+
+<p><strong>شرح الكود للمبتدئين:</strong></p>
+
+<p>هذا الكود مكتوب بلغة <strong>VBA داخل قاعدة بيانات Access</strong>، والغرض منه هو إضافة خدمات فرعية (Sub-services) وربطها بالأقسام والخدمات الرئيسية بطريقة منظمة وسهلة الاستخدام.</p>
+
+<h3>1️⃣ Command11_Click</h3>
+<p>
+عند الضغط على زر <strong>Command11</strong>:
+<ul>
+  <li>يتم تبديل ظهور بعض العناصر في النموذج: <strong>Box32</strong>, <strong>EnterButton</strong>, و <strong>Home</strong>.</li>
+  <li>الفكرة: إظهار أو إخفاء حقول التحكم حسب حاجة المستخدم.</li>
+</ul>
+</p>
+
+<h3>2️⃣ Depc_AfterUpdate</h3>
+<p>
+عند اختيار قسم (Department) من القائمة المنسدلة <strong>Depc</strong>:
+<ul>
+  <li>يتم إعادة تحميل قائمة <strong>Mainc</strong> لتعرض الخدمات المرتبطة بالقسم المختار.</li>
+</ul>
+</p>
+
+<h3>3️⃣ EnterButton_Click</h3>
+<p>
+عند الضغط على زر <strong>إدخال</strong>:
+<ul>
+  <li>يقوم الكود بالتحقق من أن المستخدم قد اختار القسم، الخدمة، وأدخل اسم الخدمة الفرعية.</li>
+  <li>إذا كانت أي قيمة مفقودة، يظهر رسالة تحذير <strong>MsgBox</strong>.</li>
+  <li>ثم يتم إدراج البيانات في جدول <strong>Sub_services</strong> باستخدام <strong>SQL Insert</strong>.</li>
+  <li>بعد الإدخال، يظهر رسالة تأكيد <strong>Sub-Service added successfully</strong>.</li>
+  <li>يمكنك اختيارياً مسح الحقول لتسهيل الإدخال الجديد.</li>
+</ul>
+</p>
+
+<h3>4️⃣ Form_Load</h3>
+<p>
+عند فتح النموذج:
+<ul>
+  <li>يتم إعادة تحميل قائمة الخدمات الرئيسية <strong>Mainc</strong>.</li>
+  <li>يتم إعداد قائمة الأقسام <strong>Depc</strong> مع تحديد عدد الأعمدة وعرض كل عمود.</li>
+  <li>تساعد هذه الإعدادات في عرض البيانات بطريقة منظمة وسهلة القراءة.</li>
+</ul>
+</p>
+
+<h3>5️⃣ Home_Click</h3>
+<p>
+عند الضغط على زر <strong>Home</strong>:
+<ul>
+  <li>يتم عرض رسالة تأكيد قبل الانتقال إلى الصفحة الرئيسية.</li>
+  <li>إذا أكد المستخدم، يتم فتح نموذج <strong>Homepage</strong> وإغلاق نموذج <strong>Sub_services</strong>.</li>
+</ul>
+</p>
+
+<h3>6️⃣ Mainc_AfterUpdate</h3>
+<p>
+عند اختيار خدمة رئيسية:
+<ul>
+  <li>يتم تخزين معلومات الخدمة مثل الكود واسم الخدمة والقسم المرتبط.</li>
+  <li>يمكن استخدام هذه القيم لاحقاً في العمليات الأخرى إذا لزم الأمر.</li>
+</ul>
+</p>
+
+<h3>🛠 أجزاء يمكنك تعديلها بأمان</h3>
+<p>
+هذه أشياء يمكن لأي مبتدئ تعديلها بأمان:
+<br>
+1. نص الرسائل في <code>MsgBox</code> مثل تحذيرات الإدخال أو تأكيدات النجاح.<br>
+2. أسماء القوائم المنسدلة أو الحقول، مثل <code>Depc</code>, <code>Mainc</code>, <code>Sub_Name</code> إذا قمت بتغيير أسماء الحقول في قاعدة البيانات.<br>
+3. أسماء الجدول <code>Sub_services</code> وأعمدته إذا كانت مختلفة في قاعدة البيانات.<br>
+4. إعدادات الأعمدة للحقول المنسدلة مثل <code>ColumnCount</code> و <code>ColumnWidths</code> لتغيير طريقة عرض البيانات.<br>
+5. التحكم في ظهور العناصر باستخدام <code>Visible = True/False</code> لتخصيص واجهة النموذج.
+</p>
+
+  </div>
+</template>
+
+<!--############################################################################################################################-->
+<!--############################################################################################################################-->
+<!--############################################################################################################################-->
+
+<a href="#" class="video-link" data-article="ADMIN-article">
+ مقالات صفحة الخدمات
+</a>
+
+<a href="#" class="video-link" data-video="Videos6.mp4">
+	شرح التقارير والصفحة الرئيسية
+  </a>
+
+
+
+<template id="ADMIN-article">
+  <div dir="rtl" class="article-content">
+     
+	<h2>شرح اكواد صفحة الخدمات:</h2>
+
+    <h3>الكود الكامل لصفحة الخدمات:</h3>
+    <pre dir= "ltr">
+Option Compare Database
+Option Explicit
+
+Private Sub Depc_AfterUpdate()
+Mainc.Requery
+Subc.Requery
+
+ Dim DepCode As Long
+    DepCode = Me.Depc.Value   'Dep_Code
+
+    Me.MasterDetails.Form.Filter = "[Dep_Code] = " & DepCode
+    Me.MasterDetails.Form.FilterOn = True
+
+End Sub
+
+Private Sub EnterBut_Click()
+
+    Dim currentPage As String
+    currentPage = Me.PageC.Pages(Me.PageC.Value).Name
+
+    ' Make Dep / Main / Sub optional
+    Dim DepName As String, DepCode As String
+    Dim SerName As String, SerCode As String
+    Dim SubName As String, SubID As String
+
+    ' Build Depc
+    If IsNull(Me.Depc.Value) Then
+        DepCode = "NULL"
+        DepName = "NULL"
+    Else
+        DepCode = Me.Depc.Value
+        DepName = "'" & Me.Depc.Column(1) & "'"
+    End If
+
+    ' Build Mainc
+    If IsNull(Me.Mainc.Value) Then
+        SerCode = "NULL"
+        SerName = "NULL"
+    Else
+        SerCode = Me.Mainc.Value
+        SerName = "'" & Me.Mainc.Column(1) & "'"
+    End If
+
+    ' Build Subc
+    If IsNull(Me.Subc.Value) Then
+        SubID = "NULL"
+        SubName = "NULL"
+    Else
+        SubID = Me.Subc.Value
+        SubName = "'" & Me.Subc.Column(1) & "'"
+    End If
+
+
+    '============================================================
+    ' ===============   Q&A PAGE   ==============================
+    '============================================================
+
+    If currentPage = "ÇáÇÓÆáÉ ÇáÇßËÑ ÊßÑÇÑÇð" Then
+
+        CurrentDb.Execute _
+            "INSERT INTO [Q&A] " & _
+            "([Dep_Name], [Dep_Code], [Ser_Name], [Ser_Code], [Sub_Name], [Sub_ID], [Question], [Answer]) " & _
+            "VALUES (" & DepName & ", " & DepCode & ", " & _
+                           SerName & ", " & SerCode & ", " & _
+                           SubName & ", " & SubID & ", '" & _
+                           Nz(Me.[Q&A].Form!Question.Value, "") & "', '" & _
+                           Nz(Me.[Q&A].Form!Answer.Value, "") & "');"
+
+        MsgBox "Saved to Q&A", vbInformation
+
+
+
+    '============================================================
+    ' ===============   SERVICE REQUEST PAGE   ==================
+    '============================================================
+
+    ElseIf currentPage = "ÇáäãÇÐÌ" Then
+
+        Dim userGuideValue As String
+        If Me.[Service request forms].Form!tog.Value = True Then
+            userGuideValue = "True"
+        Else
+            userGuideValue = "NULL"
+        End If
+
+        CurrentDb.Execute _
+    "INSERT INTO [Service request form] " & _
+    "([Dep_Code], [Dep_Name], [Ser_Code], [Ser_Name], [Sub_ID], [Sub_Name], " & _
+    "[YouTube_Links], [User Guide], [Model_Link], [Model_Title]) " & _
+    "VALUES (" & DepCode & ", " & DepName & ", " & _
+                   SerCode & ", " & SerName & ", " & _
+                   SubID & ", " & SubName & ", '" & _
+                   Replace(Nz(Me.[Service request forms].Form!txtLinks.Value, ""), "'", "''") & "', " & _
+                   userGuideValue & ", '" & _
+                   Replace(Nz(Me.[Service request forms].Form!Model_Link.Value, ""), "'", "''") & "', '" & _
+                   Replace(Nz(Me.[Service request forms].Form!Model_Title.Value, ""), "'", "''") & "');"
+
+MsgBox "Saved to Service Request", vbInformation
+Me.[Service request forms].Form!Model_Title = ""
+Me.[Service request forms].Form!Model_Link = ""
+
+
+'============================================================
+' ===============   SERVICE MESSAGES PAGE   ==================
+'============================================================
+
+Else
+
+    Dim activityValue As String
+    If Me.[Teams].Form!Activity.Value = True Then
+        activityValue = "-1"   ' True
+    Else
+        activityValue = "0"    ' False
+    End If
+
+    CurrentDb.Execute _
+        "INSERT INTO [Teams] " & _
+        "([Dep_Code], [Dep_Name], [Ser_Code], [Ser_Name], [Team_Name], [Activity]) " & _
+        "VALUES (" & DepCode & ", " & DepName & ", " & _
+                       SerCode & ", " & SerName & ", " & _
+                       SubName & ", " & activityValue & ");"
+
+    MsgBox "Saved to Service Messages", vbInformation
+
+    ' Reset toggle button
+    Me.[Teams].Form!Activity.Value = False
+Me.Teams.Form!Team_Name = ""
+
+End If
+
+    Me.[Service request forms].Form!tog.Value = False
+
+End Sub
+
+Private Sub Form_Current()
+
+Mainc.Requery
+Subc.Requery
+
+End Sub
+
+Private Sub Mainc_AfterUpdate()
+Subc.Requery
+
+End Sub
+
+
+Private Sub PageC_Change()
+'Get the name of the page currently selected
+    Dim currentPage As String
+    currentPage = Me.PageC.Pages(Me.PageC.Value).Name
+
+    'Check if it is the "ÇáÇÓÆáÉ ÇáÇßËÑ ÊßÑÇÑÇð" page
+    If currentPage = "ÇáÇÓÆáÉ ÇáÇßËÑ ÊßÑÇÑÇð" Then
+        Me.Subc.Visible = True
+        Me.Subtxt.Visible = True
+    Else
+        Me.Subc.Visible = False
+        Me.Subtxt.Visible = False
+        
+    End If
+
+End Sub
+
+    </pre>
+
+<p><strong>شرح الكود للمبتدئين:</strong></p>
+
+<p>هذا الكود مكتوب بلغة <strong>VBA داخل قاعدة بيانات Access</strong>، والغرض منه هو التعامل مع نموذج يحتوي على عدة صفحات (Tabs) لكل صفحة وظيفة مختلفة، مثل: الأسئلة والأجوبة (Q&A)، طلبات الخدمة، ورسائل الفريق.</p>
+
+<h3>1️⃣ Depc_AfterUpdate</h3>
+<p>
+عند اختيار قسم من القائمة المنسدلة <strong>Depc</strong>:
+<ul>
+  <li>يتم إعادة تحميل القوائم المرتبطة <strong>Mainc</strong> و <strong>Subc</strong> لتعرض القيم الخاصة بالقسم المختار.</li>
+  <li>يتم تصفية نموذج التفاصيل <strong>MasterDetails</strong> لعرض فقط السجلات المرتبطة بالقسم.</li>
+</ul>
+</p>
+
+<h3>2️⃣ EnterBut_Click</h3>
+<p>
+عند الضغط على زر <strong>إدخال</strong>:
+<ul>
+  <li>يتم معرفة الصفحة الحالية في النموذج باستخدام <code>PageC.Pages(Me.PageC.Value).Name</code>.</li>
+  <li>ثم بناء قيم الأقسام، الخدمات، والخدمات الفرعية مع مراعاة إمكانية تركها فارغة (Optional).</li>
+  <li>يتم التعامل مع كل صفحة بشكل منفصل:</li>
+    <ul>
+      <li><strong>صفحة Q&A:</strong> يتم إدراج السؤال والإجابة في جدول <strong>[Q&A]</strong>.</li>
+      <li><strong>صفحة طلب الخدمة:</strong> يتم إدراج الرابط والفيديو ودليل المستخدم في جدول <strong>[Service request form]</strong>.</li>
+      <li><strong>صفحة رسائل الفريق:</strong> يتم إدراج النشاط واسم الفريق في جدول <strong>[Teams]</strong>.</li>
+  </ul>
+  <li>بعد الحفظ، يتم عرض رسالة تأكيد لكل صفحة وتحديث بعض الحقول.</li>
+</ul>
+</p>
+
+<h3>3️⃣ Form_Current</h3>
+<p>
+عند فتح السجل الحالي في النموذج:
+<ul>
+  <li>يتم إعادة تحميل القوائم <strong>Mainc</strong> و <strong>Subc</strong> تلقائياً لتكون متوافقة مع البيانات الحالية.</li>
+</ul>
+</p>
+
+<h3>4️⃣ Mainc_AfterUpdate</h3>
+<p>
+عند اختيار خدمة رئيسية:
+<ul>
+  <li>يتم إعادة تحميل قائمة <strong>Subc</strong> لتعرض الخدمات الفرعية الخاصة بالخدمة المختارة.</li>
+</ul>
+</p>
+
+<h3>5️⃣ PageC_Change</h3>
+<p>
+عند تغيير الصفحة (Tab):
+<ul>
+  <li>يتم معرفة الصفحة الحالية.</li>
+  <li>إذا كانت صفحة الأسئلة والأجوبة، يتم عرض قائمة <strong>Subc</strong> وحقل <strong>Subtxt</strong>.</li>
+  <li>في الصفحات الأخرى، يتم إخفاء هذه الحقول لتقليل الفوضى في الواجهة.</li>
+</ul>
+</p>
+
+<h3>🛠 أجزاء يمكنك تعديلها بأمان</h3>
+<p>
+هذه أشياء يمكن للمبتدئين تعديلها دون كسر النظام:
+<br>
+1. نصوص الرسائل في <code>MsgBox</code> لكل صفحة لتغيير التحذيرات أو تأكيدات الحفظ.<br>
+2. أسماء الحقول والقوائم مثل <code>Depc</code>, <code>Mainc</code>, <code>Subc</code>, <code>Subtxt</code> إذا كانت مختلفة في قاعدة البيانات.<br>
+3. أسماء الجداول في القاعدة مثل <code>[Q&A]</code>, <code>[Service request form]</code>, <code>[Teams]</code> إذا كانت مختلفة.<br>
+4. التحكم في ظهور الحقول حسب الصفحة باستخدام <code>Visible = True/False</code> لتغيير واجهة النموذج حسب رغبتك.<br>
+5. ضبط القيم الافتراضية عند ترك الحقول فارغة، مثل <code>NULL</code>، لتجنب الأخطاء عند الحفظ.
+</p>
+
+
+  </div>
+</template>
+
+<a href="#" class="video-link" data-article="Report-article">
+  مقالات الصفحة الرئيسية والتقارير
+</a>
+
+</div>
+
+<template id="Report-article">
+  <div dir="rtl" class="article-content">
+     
+	<h2>شرح اكواد الصفحة الرئيسية:</h2>
+
+    <h3>الكود الكامل:</h3>
+    <pre dir= "ltr">
+Option Compare Database
+
+Private Sub Command21_Click()
+Me.Refresh
+
+    ' ===== Save CODE values =====
+    TempVars!DepH = Nz(Me.DepH.Value, Null)
+    TempVars!MainH = Nz(Me.MainH.Value, Null)
+
+    ' ===== Save DISPLAY TEXT values =====
+    TempVars!DepName = Nz(Me.DepH.Column(1), "")
+    TempVars!MainName = Nz(Me.MainH.Column(1), "")
+
+    ' ===== Show controls =====
+    Me.DepH.Visible = True
+    Me.Deptxt.Visible = True
+    Me.MainH.Visible = True
+    Me.Ser_Name_Label.Visible = True
+    Me.BrintH.Visible = True
+    Me.FileH.Visible = True
+
+    ' ===== Load report container =====
+    Me.sfContainer.SourceObject = "Reports_Helper"
+    Me.sfContainer.Visible = True
+
+End Sub
+
+Private Sub Command7_Click()
+Me.sfContainer.SourceObject = "Solution steps"
+Me.sfContainer.Visible = True
+
+End Sub
+
+Private Sub DepH_AfterUpdate()
+
+    TempVars!DepH = Me.DepH.Value
+    TempVars!DepName = Me.DepH.Column(1)
+
+    ' Refresh the loaded report
+    Me.sfContainer.Requery
+Me.MainH.Requery
+Me.sfContainer.SourceObject = "Reports_Helper"
+    ' Make sure Reports_Helper is loaded
+    If Me.sfContainer.SourceObject = "Reports_Helper" Then
+        
+        ' Send displayed text from combo to report textbox
+        Me.sfContainer.Form.Service_Report.Report!DepT = Me.DepH.Column(1)
+    End If
+   
+End Sub
+
+
+Private Sub MainH_AfterUpdate()
+
+  ' Update TempVars
+    TempVars!MainH = Me.MainH.Value
+    TempVars!MainName = Me.MainH.Column(1)
+    
+    ' Force Module_Subform to requery
+      ' Reload Reports_Helper to apply filter
+    Me.sfContainer.SourceObject = ""
+    Me.sfContainer.SourceObject = "Reports_Helper"
+
+    ' Make sure Reports_Helper is loaded
+    If Me.sfContainer.SourceObject = "Reports_Helper" Then
+     Me.sfContainer.Requery
+     
+        ' Send displayed text from combo to report textbox
+        Me.sfContainer.Form.Service_Report.Report!MainT = Me.MainH.Column(1)
+        
+    End If
+If Me.sfContainer.SourceObject = "Reports_Helper" Then
+        
+        ' Send displayed text from combo to report textbox
+        Me.sfContainer.Form.Service_Report.Report!DepT = Me.DepH.Column(1)
+    End If
+End Sub
+
+
+
+
+
+
+Private Sub DepPage_Click()
+Me.sfContainer.SourceObject = "Department page"
+Me.sfContainer.Visible = True
+
+
+End Sub
+
+Private Sub HideAllButtons()
+    Dim ctl As Control
+    On Error Resume Next  ' Ignore focus errors
+    For Each ctl In Me.Controls
+        If ctl.ControlType = acCommandButton Then
+            If ctl.Name <> Screen.ActiveControl.Name Then
+                ctl.Visible = False
+            End If
+        End If
+    Next ctl
+    On Error GoTo 0
+End Sub
+
+
+
+Private Sub GiveFocusToOptions()
+    On Error Resume Next   ' In case Options is hidden
+    Me.Options.SetFocus
+    On Error GoTo 0
+End Sub
+
+Private Sub Detail_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
+    ' Hide all the “TV” buttons
+    On Error Resume Next
+    Me.Ser_PolicyPage.Visible = False
+    Me.ServicePage.Visible = False
+    Me.GuidePage.Visible = False
+    Me.MediaPage.Visible = False
+    Me.DepPage.Visible = False
+    Me.MainSerPage.Visible = False
+    Me.Sub_servicesPage.Visible = False
+    On Error GoTo 0
+
+    ' Force focus back to Options
+    GiveFocusToOptions
+End Sub
+
+Private Sub Exitpage_Click()
+    Me.sfContainer.SourceObject = ""  ' Clears the subform
+    Me.sfContainer.Visible = False
+    
+End Sub
+
+Private Sub Form_Load()
+DoCmd.Maximize
+Me.MainH.Requery
+
+End Sub
+
+Private Sub GuidePage_Click()
+
+Me.sfContainer.SourceObject = "Guideforms"
+Me.sfContainer.Visible = True
+End Sub
+
+
+Private Sub MainSerPage_Click()
+Me.sfContainer.SourceObject = "Main services"
+Me.sfContainer.Visible = True
+
+End Sub
+
+
+Private Sub MediaPage_Click()
+
+Me.sfContainer.SourceObject = "Mediaform"
+Me.sfContainer.Visible = True
+End Sub
+
+Private Sub Options_Click()
+Me.DepH.Visible = False
+Me.MainH.Visible = False
+Me.DepPage.Visible = Not Me.DepPage.Visible
+Me.MainSerPage.Visible = Not Me.MainSerPage.Visible
+Me.Sub_servicesPage.Visible = Not Me.Sub_servicesPage.Visible
+
+Me.Ser_PolicyPage.Visible = False
+Me.ServicePage.Visible = False
+Me.GuidePage.Visible = False
+Me.MediaPage.Visible = False
+
+End Sub
+
+Private Sub Ser_PolicyPage_Click()
+
+Me.sfContainer.SourceObject = "Service policy"
+Me.sfContainer.Visible = True
+End Sub
+
+Private Sub ServicePage_Click()
+
+Me.sfContainer.SourceObject = "Service Page"
+Me.sfContainer.Visible = True
+End Sub
+
+Private Sub Services_Click()
+
+Me.DepH.Visible = False
+Me.Deptxt.Visible = False
+Me.MainH.Visible = False
+Me.Ser_Name_Label.Visible = False
+Me.BrintH.Visible = False
+Me.FileH.Visible = False
+
+Me.Ser_PolicyPage.Visible = Not Me.Ser_PolicyPage.Visible
+Me.ServicePage.Visible = Not Me.ServicePage.Visible
+Me.GuidePage.Visible = Not Me.GuidePage.Visible
+Me.MediaPage.Visible = Not Me.MediaPage.Visible
+
+Me.DepPage.Visible = False
+Me.MainSerPage.Visible = False
+Me.Sub_servicesPage.Visible = False
+
+End Sub
+
+Private Sub Sub_servicesPage_Click()
+
+Me.sfContainer.SourceObject = "Sub_services"
+Me.sfContainer.Visible = True
+
+End Sub
+ </pre>
+<p><strong>شرح كود نموذج الصفحة الرئيسية (Homepage) في Access:</strong></p>
+
+<p>هذا الكود يتحكم في واجهة رئيسية فيها أزرار لفتح صفحات مختلفة (Subforms / Reports) مثل: تقارير الأقسام، نماذج الدليل، الخدمات، الوسائط، سياسات الخدمة، وغيرها.</p>
+
+<h3>1️⃣ Command21_Click</h3>
+<p>
+عند الضغط على الزر:
+<ul>
+  <li>يتم تحديث النموذج.</li>
+  <li>حفظ القيم الحالية للقوائم المنسدلة <strong>DepH</strong> و <strong>MainH</strong> في <strong>TempVars</strong> لتستخدم لاحقاً في أي مكان داخل قاعدة البيانات.</li>
+  <li>عرض جميع الحقول والعناصر المرتبطة مثل: قوائم الأقسام، الخدمات، وطباعة الملفات.</li>
+  <li>تحميل نموذج المساعدة <strong>Reports_Helper</strong> داخل صندوق <strong>sfContainer</strong>.</li>
+</ul>
+</p>
+
+<h3>2️⃣ Command7_Click</h3>
+<p>
+فتح نموذج <strong>Solution steps</strong> داخل نفس الصندوق <strong>sfContainer</strong>.
+</p>
+
+<h3>3️⃣ DepH_AfterUpdate و MainH_AfterUpdate</h3>
+<p>
+عند تغيير القسم أو الخدمة:
+<ul>
+  <li>تحديث <strong>TempVars</strong> لتخزين القيم الجديدة.</li>
+  <li>إعادة تحميل نموذج <strong>Reports_Helper</strong> لتطبيق الفلاتر الجديدة.</li>
+  <li>إرسال النصوص المعروضة في القوائم المنسدلة إلى مربعات النصوص في التقرير.</li>
+</ul>
+</p>
+
+<h3>4️⃣ DepPage_Click و GuidePage_Click و MainSerPage_Click و MediaPage_Click و Ser_PolicyPage_Click و ServicePage_Click و Sub_servicesPage_Click</h3>
+<p>
+كل زر منهم يفتح صفحة معينة داخل <strong>sfContainer</strong>:
+<ul>
+  <li>تعريف مصدر النموذج الفرعي: <code>Me.sfContainer.SourceObject = "اسم_النموذج"</code></li>
+  <li>عرض الصندوق: <code>Me.sfContainer.Visible = True</code></li>
+</ul>
+</p>
+
+<h3>5️⃣ Options_Click و Services_Click</h3>
+<p>
+عند الضغط على زر الخيارات أو الخدمات:
+<ul>
+  <li>إظهار أو إخفاء بعض الأزرار والقوائم لعرض واجهة منظمة.</li>
+  <li>تجنب عرض أكثر من صفحة في نفس الوقت.</li>
+</ul>
+</p>
+
+<h3>6️⃣ Detail_MouseMove</h3>
+<p>
+عند تحريك الماوس في منطقة التفاصيل:
+<ul>
+  <li>إخفاء جميع أزرار الصفحات المؤقتة مثل: <strong>Ser_PolicyPage</strong>, <strong>GuidePage</strong>, <strong>MediaPage</strong>...</li>
+  <li>إعادة التركيز على زر <strong>Options</strong> لتسهيل التنقل.</li>
+</ul>
+</p>
+
+<h3>7️⃣ Exitpage_Click</h3>
+<p>
+إغلاق النموذج الفرعي في <strong>sfContainer</strong> وإخفاؤه لتفريغ المساحة.
+</p>
+
+<h3>8️⃣ Form_Load</h3>
+<p>
+عند فتح النموذج:
+<ul>
+  <li>تكبير نافذة النموذج تلقائياً.</li>
+  <li>إعادة تحميل قائمة الخدمات الرئيسية <strong>MainH</strong>.</li>
+</ul>
+</p>
+
+<h3>🛠 أجزاء يمكنك تعديلها بأمان</h3>
+<p>
+هذه الأشياء يمكن للمبتدئين تعديلها بدون كسر النظام:
+<br>
+1. نصوص الرسائل <code>MsgBox</code> لتغيير التحذيرات أو التأكيدات عند حفظ أو فتح صفحة.
+<br>
+2. أسماء النماذج في <code>sfContainer.SourceObject</code> لتتناسب مع أي نماذج جديدة أضفتها.
+<br>
+3. التحكم في ظهور أو إخفاء الأزرار من خلال <code>Visible = True/False</code> حسب التصميم المطلوب.
+<br>
+4. تخزين القيم في <strong>TempVars</strong> لاستخدامها في أي مكان داخل قاعدة البيانات.
+<br>
+5. ترتيب الأزرار داخل النموذج لتغيير واجهة الصفحة الرئيسية حسب رغبتك.
+</p>
+<h3>الكود الكامل للتقارير:</h3>
+    <pre dir= "ltr">
+	Option Compare Database
+
+
+Private Sub Detail_Format(Cancel As Integer, FormatCount As Integer)
+
+    Me.DepT = Nz(TempVars!DepName, "")
+    Me.MainT = Nz(TempVars!MainName, "")
+
+End Sub
+
+
+
+	</pre>
+
+<h3>شرح كود Detail_Format</h3>
+<p>
+هذا الحدث <strong>Detail_Format</strong> يعمل لكل سطر يظهر في نموذج التقرير (Report) أو النموذج المفصل (Detail section).  
+وظيفته هنا بسيطة جداً:
+</p>
+
+<ul>
+  <li>يأخذ القيم المخزنة في <strong>TempVars</strong> (القيم التي اخترها المستخدم للقسم <code>DepH</code> والخدمة <code>MainH</code>)</li>
+  <li>ويعرضها في مربعات النصوص <strong>DepT</strong> و <strong>MainT</strong> داخل التقرير أو النموذج.</li>
+</ul>
+
+<p>بمعنى آخر: أي سطر يظهر في التقرير، سيُظهر تلقائياً اسم القسم واسم الخدمة التي اخترتها مسبقاً.</p>
+
+<h3>🛠 أجزاء يمكنك تعديلها بأمان</h3>
+<p>
+هذه الأمور يمكن تعديلها بدون كسر النظام:
+<br>
+1. تغيير مربعات النصوص <code>DepT</code> و <code>MainT</code> إلى أي مربعات أخرى تريد عرض القيم فيها.
+<br>
+2. تعديل <strong>TempVars</strong> إذا أردت استخدام متغيرات أخرى لتخزين بيانات إضافية.
+<br>
+3. يمكن إضافة مزيد من الحقول التي تريد عرضها في كل سطر بنفس الطريقة، باستخدام <code>= Nz(TempVars!اسم_المتغير, "")</code>.
+</p>
+<h3>الكود الكامل لصفحة النماذج المتكررة:</h3>
+    <pre dir= "ltr">
+	SELECT [Dep_Name], [Ser_Name], [Model_Title], [Model_Link],
+	[User guide] FROM [Service request form] WHERE (TempVars!DepH Is Null OR [Dep_Code] = TempVars!DepH) AND  
+	(TempVars!MainH Is Null OR [Ser_Code] = TempVars!MainH); 
+	</pre>
+	<h3>شرح مصدر البيانات (Record Source) لتقرير Service Request</h3>
+<p>
+هذا الاستعلام (Query) يحدد البيانات التي ستظهر في التقرير أو النموذج المرتبط بـ<strong>Service request form</strong>.  
+حتى لو لم تكن لديك خبرة بالاستعلامات، الفكرة بسيطة:
+</p>
+
+<ul>
+  <li>يختار الأعمدة التالية من الجدول:  
+    <strong>Dep_Name</strong> (اسم القسم)،  
+    <strong>Ser_Name</strong> (اسم الخدمة)،  
+    <strong>Model_Title</strong> (عنوان النموذج)،  
+    <strong>Model_Link</strong> (رابط النموذج)،  
+    <strong>User guide</strong> (دليل المستخدم).</li>
+  <li>يستخدم شرط <code>WHERE</code> لتصفية النتائج حسب ما اختاره المستخدم في النموذج:</li>
+    <ul>
+      <li>إذا لم يختر المستخدم أي قسم (<code>TempVars!DepH Is Null</code>)، يظهر كل الأقسام.</li>
+      <li>أما إذا اختار قسمًا، يظهر فقط البيانات التي تتوافق مع هذا القسم (<code>[Dep_Code] = TempVars!DepH</code>).</li>
+      <li>بنفس الطريقة، إذا لم يختر الخدمة (<code>TempVars!MainH Is Null</code>) يظهر كل الخدمات، وإلا يظهر فقط البيانات المطابقة للخدمة المحددة (<code>[Ser_Code] = TempVars!MainH</code>).</li>
+    </ul>
+</ul>
+
+<p>بمعنى آخر: هذا الاستعلام يجعل التقرير ذكيًا، يعرض فقط المعلومات المتعلقة بالقسم والخدمة التي اختارها المستخدم مسبقاً، ويترك الباقي مخفيًا.</p>
+
+<h3>🛠 أشياء يمكنك تعديلها بأمان</h3>
+<p>
+1. إضافة أعمدة جديدة من جدول <strong>Service request form</strong> إذا أردت عرض معلومات إضافية في التقرير.<br>
+2. تعديل شروط <code>WHERE</code> لتطبيق تصفيات أخرى حسب متغيرات <strong>TempVars</strong> أو أعمدة أخرى.<br>
+3. يمكنك تغيير <strong>TempVars</strong> المستخدمة لتصفية البيانات إذا كنت تريد أن يعتمد التقرير على خيارات مختلفة.
+</p>
+
+	
+  </div>
+</template>
+</div>
+
+<!-- JAVASCRIPT FILE -->
+<script src="script.js"></script>
+</body>
+</html>

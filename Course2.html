@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>المشروع الثاني: التذاكر والانذارات</title>
+ <link rel="icon" type="image/png" href="UQULOGO.png">
+  <!-- CSS FILE (THIS WAS MISSING) -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<!-- Article content hidden in HTML -->
+
+<a href="Homepage.html" class="back-button">← العودة للصفحة الرئيسية</a>
+
+<div class="layout">
+
+ <!-- VIDEO SECTION -->
+<div class="video-area">
+  <div class="video-placeholder" id="videoContainer">
+    اختر درسًا لبدء المشاهدة
+  </div>
+</div>
+
+
+  <!-- SIDEBAR -->
+ <div class="sidebar">
+  <button class="accordion">📘 مقدمة</button>
+<div class="panel">
+  <a href="#" class="video-link" data-video="Video1.mp4">
+    مقدمة المشروع الثاني
+  </a>
+
+  <a href="#" class="video-link" data-video="Video2.mp4">
+   اختبار عملي للمشروع الثاني
+  </a>
+
+</div>
+
+
+ <button class="accordion">🛠 شرح تفصيلي للمشروع</button>
+<div class="panel">
+
+  <a href="#" class="video-link" data-video="Video3.mp4">
+   شرح الملفين بالتفاصيل
+  </a>
+
+
+<a href="#" class="video-link" data-article="codes-article">
+  مقالات
+</a>
+
+
+
+
+
+<template id="codes-article">
+  <div dir="rtl" class="article-content">
+     
+	<h2>شرح اكواد صفحة المسؤول بلغة VBA</h2>
+
+    <h3>الكود الكامل:</h3>
+    <pre dir= "ltr">
+Option Compare Database
+
+Private Sub ButtonA_Click()
+
+  Dim answer As VbMsgBoxResult
+    
+    ' Ask for confirmation
+    answer = MsgBox("Are you sure you want to add a record?", vbQuestion + vbYesNo, "Confirmation")
+    
+    ' If user clicked "No", stop the code here
+    If answer = vbNo Then Exit Sub
+
+    Dim db As DAO.Database
+    Dim rs As DAO.Recordset
+    Dim currentValue As Long
+    Dim nextValue As Long
+    Const MAX_VALUE As Long = 10 ' Reset limit
+
+    Set db = CurrentDb
+
+    ' Get the last number in the Numbers table
+    Set rs = db.OpenRecordset("SELECT TOP 1 Numbers FROM Numbers WHERE Type = 1 ORDER BY ID DESC")
+
+    If Not rs.EOF Then
+        currentValue = rs!Numbers
+    Else
+        currentValue = 0
+    End If
+
+    rs.Close
+
+    ' Increment value
+    nextValue = currentValue + 1
+
+    ' Reset to 1 if limit reached
+    If nextValue > MAX_VALUE Then
+        nextValue = 1
+    End If
+
+    ' Add the new record
+    db.Execute "INSERT INTO Numbers (Numbers, Type) VALUES (" & nextValue & ", 1);"
+
+    Set db = Nothing
+End Sub
+
+Private Sub ButtonB_Click()
+
+  Dim answer As VbMsgBoxResult
+    
+    ' Ask for confirmation
+    answer = MsgBox("Are you sure you want to add a record?", vbQuestion + vbYesNo, "Confirmation")
+    
+    ' If user clicked "No", stop the code here
+    If answer = vbNo Then Exit Sub
+
+   Dim db As DAO.Database
+    Dim rs As DAO.Recordset
+    Dim currentValue As Long
+    Dim nextValue As Long
+    Const MAX_VALUE As Long = 10 ' Reset limit
+
+    Set db = CurrentDb
+
+    ' Get the last number in the Numbers table
+    Set rs = db.OpenRecordset("SELECT TOP 1 Numbers FROM Numbers WHERE Type = 2 ORDER BY ID DESC")
+
+    If Not rs.EOF Then
+        currentValue = rs!Numbers
+    Else
+        currentValue = 0
+    End If
+
+    rs.Close
+
+    ' Increment value
+    nextValue = currentValue + 1
+
+    ' Reset to 1 if limit reached
+    If nextValue > MAX_VALUE Then
+        nextValue = 1
+    End If
+
+    ' Add the new record
+    db.Execute "INSERT INTO Numbers (Numbers, Type) VALUES (" & nextValue & ", 2);"
+
+    Set db = Nothing
+End Sub
+
+    </pre>
+
+<p><strong>شرح الكود للمبتدئين:</strong></p>
+
+<p>
+هذا الكود مكتوب بلغة <strong>VBA داخل قاعدة بيانات Access (ADMIN)</strong>،
+ووظيفته الأساسية هي <strong>إنشاء أرقام تلقائية</strong> عند الضغط على أزرار معينة،
+مع التأكد من عدم الإضافة بالخطأ وتنظيم الأرقام بطريقة سهلة.
+حتى لو لم يكن لديك أي خبرة برمجية،
+سأشرح لك <strong>الفكرة العامة لما يحدث</strong> دون الدخول في تفاصيل معقدة.
+</p>
+
+<h3>1️⃣ Option Compare Database</h3>
+<p>
+هذا السطر هو إعداد عام في Access،
+ولا يحتاج المستخدم العادي للقلق بشأنه.
+وجوده يساعد النظام على العمل بشكل صحيح عند التعامل مع البيانات النصية.
+<br>
+<strong>ببساطة:</strong> سطر تجهيز للنظام قبل تنفيذ الأوامر.
+</p>
+
+<h3>2️⃣ زر ButtonA</h3>
+<p>
+عند الضغط على زر <strong>ButtonA</strong>:
+<ul>
+  <li>يظهر سؤال تأكيد للتأكد أنك تريد تنفيذ العملية.</li>
+  <li>إذا اخترت "لا"، لا يحدث أي شيء.</li>
+  <li>إذا اخترت "نعم"، يقوم النظام بإنشاء رقم جديد.</li>
+  <li>الرقم يزيد واحدًا في كل مرة.</li>
+  <li>عند الوصول إلى رقم معين (مثل 10)، يعود العد من البداية.</li>
+</ul>
+<strong>ببساطة:</strong> هذا الزر مسؤول عن عدّاد أرقام خاص به.
+</p>
+
+<h3>3️⃣ زر ButtonB</h3>
+<p>
+زر <strong>ButtonB</strong> يعمل بنفس فكرة الزر الأول تمامًا،
+لكن:
+<ul>
+  <li>يستخدم عدّادًا مختلفًا.</li>
+  <li>لا يؤثر على الأرقام التي ينشئها ButtonA.</li>
+</ul>
+<strong>ببساطة:</strong> لديك زران، وكل زر يدير مجموعة أرقام مستقلة.
+</p>
+
+<h3>4️⃣ رسالة التأكيد قبل الإضافة</h3>
+<p>
+قبل إضافة أي رقم جديد،
+يسألك النظام إن كنت متأكدًا من العملية.
+<br>
+الهدف من ذلك:
+<ul>
+  <li>منع الإضافة بالخطأ.</li>
+  <li>حماية البيانات.</li>
+  <li>إعطاء المستخدم فرصة للتراجع.</li>
+</ul>
+</p>
+
+<h3>5️⃣ فكرة إعادة العد</h3>
+<p>
+النظام مصمم بحيث لا تستمر الأرقام إلى ما لا نهاية.
+<br>
+عند الوصول إلى الحد الأعلى:
+<ul>
+  <li>يعود الرقم إلى البداية.</li>
+  <li>يبدأ العد من جديد.</li>
+</ul>
+<strong>الفكرة:</strong> مناسب لأنظمة الدور، الانتظار، أو الإدارة الداخلية.
+</p>
+
+<h3>🛠 أجزاء يمكنك تعديلها بأمان</h3>
+<p>
+في هذا الجزء ستتعرف على العناصر التي يمكن تغييرها في الكود
+دون التأثير على طريقة عمله الأساسية.
+فهم هذه الأجزاء يساعدك على تخصيص النظام
+مع الحفاظ على استقراره.
+<br><br>
+
+1️⃣ <strong>الحد الأعلى للأرقام</strong>:<br>
+يمكنك تغيير الرقم الذي يتوقف عنده العد
+(مثل 10 أو 20 أو أي قيمة أخرى)
+بحسب احتياج النظام،
+دون التأثير على منطق العمل.
+<br><br>
+
+2️⃣ <strong>نص رسالة التأكيد</strong>:<br>
+الرسالة التي تظهر قبل الإضافة
+يمكن تعديل نصها أو لغتها
+لتكون أوضح للمستخدم
+أو مناسبة لبيئة العمل.
+<br><br>
+
+3️⃣ <strong>تخصيص وظيفة كل زر</strong>:<br>
+يمكن اعتبار كل زر ممثلًا لقسم أو نوع معين،
+وتغيير هذا الاستخدام لا يتطلب تعديل طريقة العد نفسها،
+بل فقط طريقة توظيف الزر داخل النظام.
+<br><br>
+
+4️⃣ <strong>تكرار الفكرة لإضافة أزرار جديدة</strong>:<br>
+يمكن إنشاء أزرار إضافية تعمل بنفس الأسلوب،
+مع الحفاظ على نفس القواعد،
+دون الحاجة لتغيير الآلية الأساسية للكود.
+</p>
+
+
+  
+  </div>
+</template>
+
+
+<a href="#" class="video-link" data-article="ADMIN-article">
+  2 مقالات
+</a>
+
+
+
+</div>
+
+<template id="ADMIN-article">
+  <div dir="rtl" class="article-content">
+     
+	<h2> شرح صفحة استعشار التذاكر بلغة VBA</h2>
+
+    <h3>الكود الكامل:</h3>
+    <pre dir= "ltr">
+Option Compare Database
+Option Explicit
+
+Dim LastID As Long
+
+Private Sub Form_Unload(Cancel As Integer)
+    Dim answer As VbMsgBoxResult
+    
+    answer = MsgBox("Are you sure you want to close the notification form?", vbQuestion + vbYesNo, "Confirm Close")
+    
+    If answer = vbNo Then
+        Cancel = True  ' Stops the form from closing
+    End If
+End Sub
+
+Private Sub Form_Load()
+    ' Set timer interval to check every 5 seconds (5000 ms)
+    Me.TimerInterval = 5000
+    
+    ' Store the latest ID on startup
+    LastID = Nz(DMax("ID", "Numbers"), 0)
+End Sub
+
+Private Sub Form_Timer()
+    Dim NewID As Long
+    
+    ' Get the latest record ID
+    NewID = Nz(DMax("ID", "Numbers"), 0)
+    
+    ' Check if a new record was added
+    If NewID > LastID Then
+        ' Update stored value
+        LastID = NewID
+        
+        ' Optional: Check if the new record is Type = 1 (Form-A)
+        Dim recType As Variant
+        recType = DLookup("Type", "Numbers", "ID=" & NewID)
+        
+        If recType = 1 Then
+            ' Open Form-A automatically
+            DoCmd.OpenForm "Form-A"
+        
+        End If
+        If recType = 2 Then
+        DoCmd.OpenForm "Form-B"
+        
+        End If
+        
+    End If
+End Sub
+
+    </pre>
+<p><strong>شرح الكود للمبتدئين:</strong></p>
+
+<p>
+هذا الكود مكتوب بلغة <strong>VBA داخل قاعدة بيانات Access</strong>، والغرض منه هو <strong>مراقبة جدول الأرقام تلقائيًا وفتح النماذج المناسبة عند إضافة سجل جديد</strong>. حتى لو لم يكن لديك خبرة برمجية، سأشرح لك <strong>الفكرة العامة لكل جزء بطريقة بسيطة</strong>.
+</p>
+
+<h3>1️⃣ Option Compare Database و Option Explicit</h3>
+<p>
+<strong>Option Compare Database</strong>: يخبر Access كيف يقارن النصوص داخل قاعدة البيانات.<br>
+<strong>Option Explicit</strong>: يفرض تعريف جميع المتغيرات قبل استخدامها لتجنب الأخطاء.<br>
+<strong>ببساطة:</strong> هذه الأسطر تجعل الكود أكثر أمانًا وسهل التصحيح.
+</p>
+
+<h3>2️⃣ المتغير LastID</h3>
+<p>
+هذا المتغير يخزن <strong>رقم التعريف الأخير</strong> الموجود في جدول "Numbers" عند فتح النموذج أو بعد أي عملية إضافة.  
+الغرض: مقارنة الرقم الحالي بالرقم الجديد لمعرفة ما إذا تم إضافة سجل جديد.
+</p>
+
+<h3>3️⃣ Form_Unload</h3>
+<p>
+عند محاولة إغلاق النموذج:
+<ul>
+  <li>يظهر رسالة تأكيد للمستخدم.</li>
+  <li>إذا اخترت "لا"، يمنع النموذج من الإغلاق.</li>
+  <li>إذا اخترت "نعم"، يغلق النموذج كما هو معتاد.</li>
+</ul>
+<strong>ببساطة:</strong> يمنع الإغلاق بالخطأ.
+</p>
+
+<h3>4️⃣ Form_Load</h3>
+<p>
+عند فتح النموذج:
+<ul>
+  <li>يتم تعيين <strong>مؤقت</strong> ليعمل كل 5 ثواني.</li>
+  <li>يتم قراءة آخر رقم موجود في جدول "Numbers" وتخزينه في LastID.</li>
+</ul>
+<strong>الفكرة:</strong> النموذج يبدأ مراقبًا السجلات فور فتحه.
+</p>
+
+<h3>5️⃣ Form_Timer</h3>
+<p>
+كل 5 ثواني، هذا الجزء يتحقق:
+<ul>
+  <li>يقرأ آخر رقم موجود في جدول "Numbers".</li>
+  <li>يقارن الرقم الجديد بالرقم المخزن في LastID.</li>
+  <li>إذا كان الرقم الجديد أكبر، يعني أنه تمت إضافة سجل جديد.</li>
+  <li>يعيد تحديث LastID ليعرف الرقم الأخير.</li>
+  <li>يفحص نوع السجل (<code>Type</code>) ويقرر أي نموذج يفتح:</li>
+    <ul>
+      <li>Type = 1 → يفتح Form-A</li>
+      <li>Type = 2 → يفتح Form-B</li>
+    </ul>
+</ul>
+<strong>ببساطة:</strong> هذا يتيح للنظام <strong>فتح النماذج تلقائيًا عند إضافة أرقام جديدة</strong>.
+</p>
+
+<h3>🛠 أجزاء يمكنك تعديلها بأمان</h3>
+<p>
+هذه هي العناصر التي يمكن تعديلها لتخصيص الكود مع الحفاظ على عمله الأساسي:
+<br><br>
+
+1️⃣ <strong>الفاصل الزمني للمؤقت</strong>:<br>
+يمكنك تغيير القيمة <code>Me.TimerInterval = 5000</code> لتقليل أو زيادة فترة التحقق (مثلاً 2000 = كل ثانيتين).<br><br>
+
+2️⃣ <strong>أسماء النماذج التي تُفتح</strong>:<br>
+يمكنك تعديل <code>DoCmd.OpenForm "Form-A"</code> و<code>"Form-B"</code> لتفتح أي نموذج آخر يناسب حاجتك.<br><br>
+
+3️⃣ <strong>نوع السجل الذي يتحقق منه النظام</strong>:<br>
+يمكنك تغيير قيم <code>Type</code> (1، 2، أو أي رقم) لتتوافق مع أنواع السجلات في جدولك.<br><br>
+
+4️⃣ <strong>رسالة التأكيد عند الإغلاق</strong>:<br>
+يمكنك تعديل نص رسالة <code>MsgBox</code> لتكون أكثر وضوحًا أو ملائمة لبيئة العمل.<br><br>
+
+<strong>ملاحظة:</strong> لا تقم بحذف أي سطر مسؤول عن LastID أو Form_Timer، لأنها الأساس في عمل المراقبة التلقائية.
+</p>
+
+	<h2> شرح صفحات اظهار التذاكر والانذارات</h2>
+
+    <h3>الكود الكامل:</h3>
+    <pre dir= "ltr"> 
+	Option Compare Database
+Option Explicit
+
+Private FlashOn As Boolean
+Private lastActivityTime As Date
+
+Private Sub Form_Load()
+    DoCmd.Maximize
+    
+    ' Flash & refresh every 0.5 second
+    Me.TimerInterval = 2000
+    FlashOn = True
+    
+    ' Initialize last activity time
+    lastActivityTime = Now()
+End Sub
+
+Private Sub Form_Timer()
+    Static blinkState As Boolean
+
+    ' === Flashing and Beep ===
+    blinkState = Not blinkState
+    Me.Text0.BackColor = IIf(blinkState, vbRed, vbWhite)
+    Beep
+
+    If FlashOn Then
+        Me.Text0.ForeColor = RGB(255, 0, 0)
+        Me.Text0.BackColor = RGB(0, 0, 0)
+    Else
+        Me.Text0.ForeColor = RGB(255, 255, 255)
+        Me.Text0.BackColor = RGB(0, 0, 0)
+    End If
+    FlashOn = Not FlashOn
+
+    ' === Update displayed number ===
+    Dim latestID As Variant
+    Dim typeValue As Variant
+    Dim numberValue As Variant
+
+    latestID = DMax("ID", "Numbers", "Type=1")
+    If Not IsNull(latestID) Then
+        numberValue = DLookup("Numbers", "Numbers", "ID=" & latestID)
+        typeValue = DLookup("Type", "Types", "Section_ID=1")
+        Me.Text0 = typeValue & "-" & numberValue
+    Else
+        Me.Text0 = ""
+    End If
+
+    ' === Check for inactivity (every 5 seconds) ===
+    If DateDiff("s", lastActivityTime, Now()) >= 5 Then
+        Call HandleInactivity
+    End If
+End Sub
+
+' === Detect activity (mouse move resets the timer) ===
+Private Sub Form_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
+    lastActivityTime = Now()
+End Sub
+
+Private Sub HandleInactivity()
+    Dim latestID As Variant
+    Dim warningValue As Variant
+
+    latestID = DMax("ID", "Numbers", "Type=1")
+    If Not IsNull(latestID) Then
+        ' Get the Warning_Type value from Types for section A
+        warningValue = DLookup("Warning_Type", "Types", "Section_ID=1")
+        If Not IsNull(warningValue) Then
+            CurrentDb.Execute "UPDATE Numbers SET Warning_Type = " & warningValue & " WHERE ID=" & latestID
+        End If
+    End If
+
+    ' Show message and close
+    MsgBox "Sorry you weren’t doing your job, this has been sent to section C.", vbExclamation, "Warning"
+    DoCmd.Close acForm, Me.Name
+End Sub
+
+Private Sub Command2_Click()
+    DoCmd.Close acForm, Me.Name
+End Sub
+
+	</pre>
+  
+  <p><strong>شرح الكود للمبتدئين:</strong></p>
+
+<p>
+هذا الكود مكتوب بلغة <strong>VBA داخل قاعدة بيانات Access</strong>، والغرض منه هو <strong>عرض رقم متغير مع تأثير وامض وتحذير تلقائي عند عدم التفاعل</strong>. حتى لو لم يكن لديك خبرة برمجية، سأشرح لك <strong>الفكرة العامة لكل جزء بطريقة بسيطة</strong>.
+</p>
+
+<h3>1️⃣ Option Compare Database و Option Explicit</h3>
+<p>
+<strong>Option Compare Database</strong>: يخبر Access كيف يقارن النصوص داخل قاعدة البيانات.<br>
+<strong>Option Explicit</strong>: يفرض تعريف جميع المتغيرات قبل استخدامها لتجنب الأخطاء.<br>
+<strong>ببساطة:</strong> هذه الأسطر تجعل الكود أكثر أمانًا وسهل التصحيح.
+</p>
+
+<h3>2️⃣ المتغيرات FlashOn و lastActivityTime</h3>
+<p>
+- <strong>FlashOn</strong>: يتحكم في حالة الوميض الحالي للنص.<br>
+- <strong>lastActivityTime</strong>: يخزن آخر وقت قام فيه المستخدم بالتفاعل مع النموذج (مثل تحريك الماوس).<br>
+<strong>الفكرة:</strong> تستخدم هذه المتغيرات للتحكم في التأثيرات البصرية ومراقبة النشاط.
+</p>
+
+<h3>3️⃣ Form_Load</h3>
+<p>
+عند فتح النموذج:
+<ul>
+  <li>يتم تكبير النموذج تلقائيًا.</li>
+  <li>يتم ضبط المؤقت ليعمل كل 2 ثانية (2000 ملي ثانية) لتحديث الوميض والرقم.</li>
+  <li>يتم تهيئة حالة FlashOn وأيضًا آخر وقت نشاط المستخدم.</li>
+</ul>
+<strong>ببساطة:</strong> هذا الجزء يجهز النموذج للعمل مباشرة مع الوميض والمراقبة.
+</p>
+
+<h3>4️⃣ Form_Timer</h3>
+<p>
+كل 2 ثانية، هذا الجزء يقوم بثلاث مهام رئيسية:
+<ul>
+  <li><strong>وميض النص وإصدار صوت Beep</strong> لجذب انتباه المستخدم.</li>
+  <li><strong>تحديث الرقم المعروض</strong> من جدول "Numbers" و "Types" بشكل تلقائي.</li>
+  <li><strong>مراقبة عدم النشاط</strong>: إذا مر أكثر من 5 ثواني بدون حركة، يتم استدعاء الدالة HandleInactivity.</li>
+</ul>
+<strong>ببساطة:</strong> هذا الجزء يجعل النص وامضًا ويعرض المعلومات الحية ويتأكد من تفاعل المستخدم.
+</p>
+
+<h3>5️⃣ Form_MouseMove</h3>
+<p>
+كل مرة يقوم المستخدم بتحريك الماوس فوق النموذج:
+<ul>
+  <li>يتم تحديث <strong>lastActivityTime</strong> إلى الوقت الحالي.</li>
+</ul>
+<strong>الفكرة:</strong> هذه الطريقة لإلغاء التحذير إذا كان المستخدم نشيطًا.
+</p>
+
+<h3>6️⃣ HandleInactivity</h3>
+<p>
+إذا لم يتحرك المستخدم خلال الوقت المحدد:
+<ul>
+  <li>يتم أخذ آخر سجل في جدول "Numbers".</li>
+  <li>تحديث الحقل <code>Warning_Type</code> في الجدول بناءً على نوع التحذير المحدد في جدول "Types".</li>
+  <li>إظهار رسالة تحذير للمستخدم.</li>
+  <li>إغلاق النموذج تلقائيًا.</li>
+</ul>
+<strong>ببساطة:</strong> هذا الجزء يتصرف عندما يكون المستخدم غير نشيط، ويوفر تحذيرًا وإجراءات تلقائية.
+</p>
+
+<h3>7️⃣ Command2_Click</h3>
+<p>
+هذا الزر يغلق النموذج مباشرة عند الضغط عليه.
+</p>
+
+<h3>🛠 أجزاء يمكنك تعديلها بأمان</h3>
+<p>
+هذه هي العناصر التي يمكن تعديلها دون كسر وظيفة النظام:
+<br><br>
+
+1️⃣ <strong>الفاصل الزمني للمؤقت</strong>:<br>
+يمكنك تغيير القيمة <code>Me.TimerInterval = 2000</code> لتقليل أو زيادة سرعة تحديث الوميض والرقم.<br><br>
+
+2️⃣ <strong>ألوان النص والخلفية</strong>:<br>
+يمكنك تعديل القيم في <code>Me.Text0.ForeColor</code> و<code>Me.Text0.BackColor</code> لتغيير ألوان الوميض كما تريد.<br><br>
+
+3️⃣ <strong>وقت عدم النشاط</strong>:<br>
+يمكنك تعديل القيمة في <code>DateDiff("s", lastActivityTime, Now()) >= 5</code> لتحديد بعد كم ثانية يظهر التحذير.<br><br>
+
+4️⃣ <strong>النماذج والرسائل</strong>:<br>
+يمكنك تعديل نص <code>MsgBox</code> أو تغيير النماذج التي تفتح عند التحذير لتناسب بيئة العمل.<br><br>
+
+5️⃣ <strong>الجداول والأعمدة</strong>:<br>
+يمكنك تعديل أسماء الجداول أو الحقول مثل <code>Numbers</code> و<code>Types</code> إذا كان لديك بنية مختلفة في قاعدة البيانات.
+</p>
+
+	<h2>شرح صفحة استقبال التذاكر المنسيه</h2>
+
+    <h3>الكود الكامل:</h3>
+    <pre dir= "ltr">
+	Option Compare Database
+Option Explicit
+
+' === Tracking variables for smooth refresh ===
+Private lastCount As Long
+Private lastMaxID As Long
+
+Private Sub Form_Load()
+    ' Fill the warning list when the form opens
+    Call RefreshWarningList(True)
+
+    ' === Fill BoxA with all A-section warnings ===
+    Me.BoxA.RowSource = _
+        "SELECT Types.Type & '-' & Numbers.Numbers AS TicketLabel " & _
+        "FROM Numbers INNER JOIN Types ON Numbers.Type = Types.Section_ID " & _
+        "WHERE Types.Type = 'A' AND Numbers.Warning_Type Is Not Null;"
+
+    ' === Fill BoxB with all B-section warnings ===
+    Me.BoxB.RowSource = _
+        "SELECT Types.Type & '-' & Numbers.Numbers AS TicketLabel " & _
+        "FROM Numbers INNER JOIN Types ON Numbers.Type = Types.Section_ID " & _
+        "WHERE Types.Type = 'B' AND Numbers.Warning_Type Is Not Null;"
+
+    ' Set refresh every 3 seconds
+    Me.TimerInterval = 3000
+End Sub
+
+Private Sub Form_Timer()
+    ' Only refresh if the data in Numbers changed
+    Call RefreshWarningList(False)
+End Sub
+
+Private Sub BoxA_Click()
+    Me.BoxB = Null
+    ' Refresh BoxA when clicked to get latest A-section warnings
+    Me.BoxA.RowSource = _
+        "SELECT Types.Type & '-' & Numbers.Numbers AS TicketLabel " & _
+        "FROM Numbers INNER JOIN Types ON Numbers.Type = Types.Section_ID " & _
+        "WHERE Types.Type = 'A' AND Numbers.Warning_Type Is Not Null;"
+    Me.BoxA.Requery
+End Sub
+
+Private Sub BoxB_Click()
+    Me.BoxA = Null
+    ' Refresh BoxB when clicked to get latest B-section warnings
+    Me.BoxB.RowSource = _
+        "SELECT Types.Type & '-' & Numbers.Numbers AS TicketLabel " & _
+        "FROM Numbers INNER JOIN Types ON Numbers.Type = Types.Section_ID " & _
+        "WHERE Types.Type = 'B' AND Numbers.Warning_Type Is Not Null;"
+    Me.BoxB.Requery
+End Sub
+
+Private Sub BoxA_AfterUpdate()
+    ' When the user selects something in BoxA, show it in the Ticket textbox
+    Me.Ticket = Me.BoxA.Value
+End Sub
+
+Private Sub BoxB_AfterUpdate()
+    ' When the user selects something in BoxB, show it in the Ticket textbox
+    Me.Ticket = Me.BoxB.Value
+End Sub
+
+Private Sub List11_Click()
+    ' Clear other boxes when listbox is used
+    Me.BoxA = Null
+    Me.BoxB = Null
+End Sub
+
+Private Sub List11_AfterUpdate()
+    If Not IsNull(Me.List11) Then
+        Me.Ticket = Me.List11.Value
+    Else
+        Me.Ticket = ""
+    End If
+End Sub
+
+Private Sub Delete_Click()
+    Dim ticketValue As String
+    Dim confirm As VbMsgBoxResult
+    Dim parts() As String
+    Dim letterPart As String
+    Dim numberPart As Long
+    Dim typeID As Variant
+    Dim sqlDelete As String
+
+    ' Get the value from the Ticket textbox
+    ticketValue = Nz(Me.Ticket.Value, "")
+
+    ' Check if empty
+    If ticketValue = "" Then
+        MsgBox "Please select a ticket to delete first.", vbExclamation, "No Ticket Selected"
+        Exit Sub
+    End If
+
+    ' Confirm deletion
+    confirm = MsgBox("Are you sure you want to delete ticket '" & ticketValue & "'?", vbYesNo + vbQuestion, "Confirm Deletion")
+    If confirm <> vbYes Then
+        MsgBox "Deletion canceled.", vbInformation, "Canceled"
+        Exit Sub
+    End If
+
+    ' Split the value (e.g. "A-5" ? "A" and "5")
+    parts = Split(ticketValue, "-")
+    If UBound(parts) <> 1 Then
+        MsgBox "Invalid ticket format. It should look like A-5.", vbCritical, "Error"
+        Exit Sub
+    End If
+
+    letterPart = Trim(parts(0))
+    numberPart = Val(parts(1))
+
+    ' Find the numeric Type ID from the Types table
+    typeID = DLookup("Section_ID", "Types", "Type='" & letterPart & "'")
+
+    If IsNull(typeID) Then
+        MsgBox "Couldn't find type '" & letterPart & "' in the Types table.", vbCritical, "Error"
+        Exit Sub
+    End If
+
+    ' Build and run the delete query
+    sqlDelete = "DELETE FROM Numbers WHERE Numbers=" & numberPart & " AND Type=" & typeID
+
+    DoCmd.SetWarnings False
+    DoCmd.RunSQL sqlDelete
+    DoCmd.SetWarnings True
+
+    MsgBox "Ticket '" & ticketValue & "' has been deleted.", vbInformation, "Deleted"
+
+    ' Clear and refresh all
+    Me.Ticket = Null
+    Me.BoxA.Requery
+    Me.BoxB.Requery
+    RefreshWarningList True  ' Force immediate refresh of List11
+End Sub
+
+' === Core refresh logic for List11 ===
+Private Sub RefreshWarningList(forceReload As Boolean)
+    Dim currentCount As Long
+    Dim currentMaxID As Long
+    Dim sqlList As String
+
+    currentCount = Nz(DCount("*", "Numbers", "Warning_Type Is Not Null"), 0)
+    currentMaxID = Nz(DMax("ID", "Numbers", "Warning_Type Is Not Null"), 0)
+
+    ' Only reload if data changed or forced
+    If Not forceReload Then
+        If currentCount = lastCount And currentMaxID = lastMaxID Then Exit Sub
+    End If
+
+    ' Build SQL for list11
+    sqlList = "SELECT Types.Type & '-' & Numbers.Numbers AS DisplayValue " & _
+              "FROM Types INNER JOIN Numbers ON Types.Section_ID = Numbers.Type " & _
+              "WHERE Numbers.Warning_Type Is Not Null " & _
+              "ORDER BY Numbers.ID;"
+
+    ' Update List11 smoothly (no flicker)
+    Application.Echo False
+    Me.List11.Visible = False
+    Me.List11.RowSourceType = "Table/Query"
+    Me.List11.RowSource = sqlList
+    Me.List11.Requery
+    Me.List11.Visible = True
+    Application.Echo True
+
+    ' Update tracking variables
+    lastCount = currentCount
+    lastMaxID = currentMaxID
+End Sub
+
+
+	</pre>
+	
+	<p><strong>شرح الكود للمبتدئين:</strong></p>
+
+<p>
+هذا الكود مكتوب بلغة <strong>VBA داخل قاعدة بيانات Access</strong>، والغرض منه هو <strong>إدارة وعرض التذاكر التحذيرية لكل قسم ومراقبتها بشكل ديناميكي</strong>. حتى لو لم يكن لديك خبرة برمجية، سأشرح لك <strong>الفكرة العامة لكل جزء بطريقة سهلة وبسيطة</strong>.
+</p>
+
+<h3>1️⃣ Option Compare Database و Option Explicit</h3>
+<p>
+<strong>Option Compare Database</strong>: يخبر Access كيف يقارن النصوص داخل قاعدة البيانات.<br>
+<strong>Option Explicit</strong>: يفرض تعريف جميع المتغيرات قبل استخدامها لتجنب الأخطاء.<br>
+<strong>ببساطة:</strong> هذه الأسطر تجعل الكود أكثر أمانًا وسهل التصحيح.
+</p>
+
+<h3>2️⃣ المتغيرات lastCount و lastMaxID</h3>
+<p>
+هذان المتغيران يخزنان <strong>عدد التذاكر الحالية</strong> و<strong>أكبر رقم ID</strong> موجود في جدول "Numbers".  
+الغرض: معرفة إذا حدثت تغييرات جديدة في الجدول لتحديث القائمة تلقائيًا دون إعادة تحميل غير ضروري.
+</p>
+
+<h3>3️⃣ Form_Load</h3>
+<p>
+عند فتح النموذج:
+<ul>
+  <li>يتم ملء القوائم BoxA وBoxB بكل التحذيرات الموجودة لكل قسم (A وB).</li>
+  <li>يتم استدعاء <code>RefreshWarningList(True)</code> لملء القائمة الرئيسية List11.</li>
+  <li>يتم ضبط المؤقت ليعمل كل 3 ثواني لتحديث التذاكر الجديدة تلقائيًا.</li>
+</ul>
+<strong>الفكرة:</strong> النموذج يظهر كل التحذيرات الحالية مباشرة ويبدأ بالمراقبة التلقائية.
+</p>
+
+<h3>4️⃣ BoxA_Click و BoxB_Click</h3>
+<p>
+عند النقر على أي من القوائم BoxA أو BoxB:
+<ul>
+  <li>تُفرغ القائمة الأخرى لتجنب التضارب.</li>
+  <li>يتم تحديث محتوى القائمة بالنماذج الأخيرة.</li>
+</ul>
+<strong>ببساطة:</strong> يتيح لك الاطلاع على التحذيرات الجديدة لكل قسم بسهولة.
+</p>
+
+<h3>5️⃣ BoxA_AfterUpdate و BoxB_AfterUpdate</h3>
+<p>
+عند اختيار تذكرة من BoxA أو BoxB:
+<ul>
+  <li>يتم عرض التذكرة المختارة في مربع النص <code>Ticket</code>.</li>
+</ul>
+<strong>الفكرة:</strong> يسهل على المستخدم رؤية التذكرة المختارة دون الحاجة لكتابتها يدوياً.
+</p>
+
+<h3>6️⃣ List11_Click و List11_AfterUpdate</h3>
+<p>
+عند استخدام القائمة الرئيسية List11:
+<ul>
+  <li>يتم مسح BoxA وBoxB لتجنب التضارب بين الاختيارات.</li>
+  <li>يتم عرض التذكرة المختارة في مربع النص Ticket.</li>
+</ul>
+<strong>ببساطة:</strong> يسمح للمستخدم باختيار أي تذكرة مباشرة من القائمة الكبيرة.
+</p>
+
+<h3>7️⃣ Delete_Click</h3>
+<p>
+عند الضغط على زر الحذف:
+<ul>
+  <li>يتحقق من وجود تذكرة محددة في مربع النص Ticket.</li>
+  <li>يعرض رسالة تأكيد للحذف.</li>
+  <li>يفصل التذكرة إلى حرف وقيمة رقمية (مثلاً "A-5" → "A" و 5).</li>
+  <li>يبحث عن النوع الرقمي في جدول Types.</li>
+  <li>ينفذ استعلام حذف لتلك التذكرة في جدول Numbers.</li>
+  <li>يعرض رسالة نجاح ويقوم بتحديث جميع القوائم.</li>
+</ul>
+<strong>ببساطة:</strong> يسمح بحذف التذاكر بطريقة منظمة وآمنة مع تأكيد قبل الحذف.
+</p>
+
+<h3>8️⃣ RefreshWarningList</h3>
+<p>
+هذه الدالة تقوم بتحديث القائمة الرئيسية List11:
+<ul>
+  <li>تقرأ عدد التذاكر وأكبر رقم ID موجود حاليًا.</li>
+  <li>تقوم بإعادة تحميل البيانات فقط إذا تغيرت.</li>
+  <li>تبني استعلام SQL لعرض التذاكر مع النوع في List11.</li>
+  <li>تستخدم <code>Application.Echo</code> لمنع أي وميض أثناء التحديث.</li>
+</ul>
+<strong>الفكرة:</strong> هذه الطريقة تجعل القائمة تتحدث تلقائيًا وبسلاسة دون أي تشويش للمستخدم.
+</p>
+
+<h3>🛠 أجزاء يمكنك تعديلها بأمان</h3>
+<p>
+هذه هي العناصر التي يمكن تعديلها دون كسر النظام:
+<br><br>
+
+1️⃣ <strong>الفاصل الزمني للمؤقت</strong>:<br>
+يمكنك تعديل <code>Me.TimerInterval = 3000</code> لتحديد سرعة تحديث القوائم (مثلاً كل ثانية أو كل 5 ثواني).<br><br>
+
+2️⃣ <strong>أسماء القوائم ومربعات النص</strong>:<br>
+يمكنك تعديل BoxA, BoxB, List11 أو Ticket إذا كانت لديك عناصر مختلفة في النموذج.<br><br>
+
+3️⃣ <strong>الجداول أو الأعمدة</strong>:<br>
+يمكنك تعديل أسماء الجداول أو الحقول مثل <code>Numbers</code> و<code>Types</code> إذا كانت قاعدة البيانات مختلفة.<br><br>
+
+4️⃣ <strong>نوع التذاكر</strong>:<br>
+يمكنك تعديل القيم A وB لتتناسب مع أقسام أخرى حسب تصميم قاعدة البيانات.<br><br>
+
+5️⃣ <strong>رسائل المستخدم</strong>:<br>
+يمكنك تعديل نصوص <code>MsgBox</code> لجعلها أكثر وضوحًا أو ملائمة للبيئة العملية.
+</p>
+
+	
+  </div>
+</template>
+<!-- JAVASCRIPT FILE -->
+<script src="script.js"></script>
+</body>
+</html>

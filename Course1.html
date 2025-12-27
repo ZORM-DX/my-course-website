@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>المشروع الاول: الترتيب الشجري</title>
+ <link rel="icon" type="image/png" href="UQULOGO.png">
+  <!-- CSS FILE (THIS WAS MISSING) -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<!-- Article content hidden in HTML -->
+
+<a href="Homepage.html" class="back-button">← العودة للصفحة الرئيسية</a>
+
+<div class="layout">
+
+ <!-- VIDEO SECTION -->
+<div class="video-area">
+  <div class="video-placeholder" id="videoContainer">
+    اختر درسًا لبدء المشاهدة
+  </div>
+</div>
+
+
+  <!-- SIDEBAR -->
+ <div class="sidebar">
+  <button class="accordion">📘 مقدمة</button>
+<div class="panel">
+<a href="#"
+   class="video-link"
+   data-video="https://www.youtube.com/embed/-i5wdgPHglI?si=EmbROkoI4thlqXni">
+  مقدمة المشروع الاول
+</a>
+
+
+  <a href="#" class="video-link" data-video="Vid2.mp4">
+    اختبار عملي للمشروع الاول
+  </a>
+
+</div>
+
+
+ <button class="accordion">🛠 شرح تفصيلي للمشروع</button>
+<div class="panel">
+
+  <a href="#" class="video-link" data-video="Vid3.mp4">
+    كيفية انشاء شجرة معلوماتية
+  </a>
+
+  <a href="#" class="video-link" data-video="Vid4.mp4">
+    طريقة عمل جداول وفهم جداول الشجرة
+  </a>
+
+  <a href="#" class="video-link" data-video="Vid5.mp4">
+    عرص التصميم والاكواد بشكل مبسط
+  </a>
+
+<a href="#" class="video-link" data-article="codes-article">
+  مقالات
+</a>
+
+
+
+</div>
+
+<template id="codes-article">
+  <div dir="rtl" class="article-content">
+     
+	<h2>شرح كود إدارة البيانات بلغة VBA</h2>
+
+    <h3>الكود الكامل:</h3>
+    <pre dir= "ltr">
+Option Compare Database
+Option Explicit
+
+Private Sub btnSave_Click()
+    On Error GoTo ErrHandler
+
+    Dim db As DAO.Database
+    Dim rs As DAO.Recordset
+    Dim ReqID As Long
+
+    ReqID = Me.txtPK_Req.Value
+    Set db = CurrentDb
+
+    ' Open the record we want to update
+    Set rs = db.OpenRecordset("SELECT * FROM tbl_Reqs WHERE PK_Req=" & ReqID & ";")
+
+    If Not rs.EOF Then
+        rs.Edit
+        rs!Req_info = Me.txtinfo_Req.Value
+        rs!mem_Req = Me.txtMem_Req.Value
+        rs.Update
+        Call loadTreeView
+        DoCmd.RunCommand acCmdSaveRecord
+        DoCmd.RunCommand acCmdRefresh
+        MsgBox "Changes saved successfully!", vbInformation
+    Else
+        MsgBox "Record not found!", vbExclamation
+    End If
+
+    rs.Close
+    Set rs = Nothing
+    Set db = Nothing
+    Exit Sub
+
+ErrHandler:
+    MsgBox "Error: " & Err.Description, vbCritical
+End Sub
+
+Private Sub Form_Load()
+    ' Load the treeview
+    Call loadTreeView
+    
+    ' Change font size for the entire treeview
+    Me.treeReqs.Font.Size = 10
+    Me.treeReqs.Font.Name = "Segoe UI"
+End Sub
+
+Private Sub treeReqs_NodeClick(ByVal Node As Object)
+    Dim lngID As Long
+    lngID = CLng(Mid(Node.Key, 2))
+    Call showNodeDetails(lngID)
+End Sub
+
+Private Sub showNodeDetails(lngID As Long)
+    Dim rs As DAO.Recordset
+    Dim frm As Form
+
+    Set frm = Forms("TreeView_Example")
+    
+    Set rs = CurrentDb.OpenRecordset( _
+        "SELECT R.PK_Req, R.mem_Req, R.ID_Parent, R.dbi_Sort, R.Req_info, T.tx_Type " & _
+        "FROM tbl_Reqs AS R " & _
+        "LEFT JOIN tbl_Type AS T ON R.ID_Type = T.PK_Type " & _
+        "WHERE R.PK_Req=" & lngID, dbOpenSnapshot)
+    
+    If Not rs.EOF Then
+        frm!txtPK_Req = rs!PK_Req
+        frm!txtMem_Req = rs!mem_Req
+        frm!txtID_Parent = rs!ID_Parent
+        frm!txtDbi_Sort = rs!dbi_Sort
+        frm!txtID_Type = rs!tx_Type
+        frm!txtinfo_Req = rs!Req_info
+    End If
+    
+    rs.Close
+End Sub
+    </pre>
+
+     <p><strong>شرح الكود للمبتدئين:</strong></p>
+
+  <p>هذا الكود مكتوب بلغة <strong>VBA داخل قاعدة بيانات Access</strong>، والغرض منه هو إدارة البيانات في نموذج (Form) بطريقة منظمة وسهلة. حتى لو لم يكن لديك أي خبرة برمجية، سأشرح لك <strong>ما يقوم به كل جزء بطريقة بسيطة</strong>:</p>
+
+  <h3>1️⃣ Option Compare Database و Option Explicit</h3>
+  <p>
+    <strong>Option Compare Database</strong>: يخبر البرنامج كيف يقارن النصوص (Strings) داخل قاعدة البيانات.<br>
+    <strong>Option Explicit</strong>: يفرض عليك تعريف كل المتغيرات قبل استخدامها، وهذا يمنع الأخطاء الناتجة عن الكتابة الخاطئة للأسماء.<br>
+    الفكرة: هذه الأسطر تجعل البرنامج أكثر أمانًا وأسهل للتصحيح.
+  </p>
+
+  <h3>2️⃣ الزر btnSave_Click</h3>
+  <p>
+    عند الضغط على زر <strong>حفظ</strong>:
+    <ul>
+      <liيفتح قاعدة البيانات الحالية.</li>
+      <li>يبحث عن السجل باستخدام رقم التعريف ReqID.</li>
+      <li>إذا وجد السجل: يغير البيانات ويحدث قاعدة البيانات ويعرض رسالة نجاح.</li>
+      <li>إذا لم يجد السجل: يعرض رسالة خطأ.</li>
+    </ul>
+    <strong>ببساطة:</strong> يسمح لك بتحديث المعلومات ورؤية النتائج مباشرة.
+  </p>
+
+  <h3>3️⃣ تحميل النموذج Form_Load</h3>
+  <p>
+    عند فتح النموذج:
+    <ul>
+      <li>يتم تحميل شجرة البيانات TreeView تلقائيًا.</li>
+      <li>يتم ضبط الخط وحجمه لتسهيل القراءة.</li>
+    </ul>
+  </p>
+
+  <h3>4️⃣ النقر على عنصر في الشجرة treeReqs_NodeClick</h3>
+  <p>
+    عند اختيار أي عنصر في شجرة البيانات، يتم استدعاء الدالة showNodeDetails لعرض كل المعلومات الخاصة بهذا السجل.
+  </p>
+
+  <h3>5️⃣ الدالة showNodeDetails(lngID)</h3>
+  <p>
+    تجلب جميع التفاصيل الخاصة بالسجل المحدد من قاعدة البيانات وتعرضها في النموذج.
+    <ul>
+      <li>تشمل الحقول PK_Req, mem_Req, ID_Parent, dbi_Sort, Req_info.</li>
+      <li>تعرض نوع السجل من جدول tbl_Type.</li>
+    </ul>
+    الهدف: عرض المعلومات بطريقة منظمة وسهلة للمستخدم.
+  </p>
+
+	 
+  <h3>🛠 أجزاء يمكنك تعديلها</h3>
+  <p>
+    إليك أبرز الأشياء التي يمكن للمبتدئين تعديلها بأمان:<br>
+    1. نص الحقول في النموذج <code>txtinfo_Req</code> أو <code>txtMem_Req</code>.<br>
+    2. حجم الخط ونوعه عند تحميل النموذج في <code>Form_Load</code>.<br>
+    3. الرسائل التي تظهر بعد الحفظ مثل <code>MsgBox "Changes saved successfully!"</code>.<br>
+    4. ترتيب أو أسماء الحقول التي تظهر عند الضغط على العقدة في <code>treeReqs_NodeClick</code>.
+  </p>
+  
+	 <h3>موديل الخاص بالاستدعاء</h3>
+	 <pre dir="ltr">
+Option Compare Database
+Option Explicit
+
+' ===============================
+' Build TreeView
+' ===============================
+Public Sub loadTreeView()
+    Dim tv As MSComctlLib.TreeView
+    Set tv = Forms("TreeView_Example").treeReqs.Object
+
+    tv.Nodes.Clear
+
+    Dim rsReqs As DAO.Recordset
+    Set rsReqs = CurrentDb.OpenRecordset("SELECT * FROM tbl_Reqs ORDER BY ID_Parent, dbi_Sort", dbOpenDynaset)
+
+    Dim strFind As String
+    strFind = "ID_Type=1"
+    rsReqs.FindFirst strFind
+    Dim nodx As MSComctlLib.Node
+
+    Dim strBook As String
+
+    Do While Not rsReqs.NoMatch
+        Set nodx = tv.Nodes.Add(, , "N" & rsReqs!PK_Req, rsReqs!mem_Req)
+        nodx.Bold = True
+
+        strBook = rsReqs.Bookmark
+        addChildren tv, nodx, rsReqs, rsReqs!PK_Req
+        rsReqs.Bookmark = strBook
+        rsReqs.FindNext strFind
+    Loop
+
+    rsReqs.Close
+    Set rsReqs = Nothing
+End Sub
+
+' ===============================
+' Recursive add children
+' ===============================
+Private Sub addChildren(tv As TreeView, nodParent As Node, rsReqs As DAO.Recordset, lngParentID As Long)
+    Dim strFind As String
+    strFind = "ID_Parent=" & lngParentID
+    rsReqs.FindFirst strFind
+
+    Dim nodx As Node
+    Dim strBook As String
+    
+    Do While Not rsReqs.NoMatch
+        Set nodx = tv.Nodes.Add(nodParent, tvwChild, "N" & rsReqs!PK_Req, Left(rsReqs!mem_Req, 50))
+       
+        Select Case rsReqs!ID_Type
+            Case 2
+                nodx.Bold = True
+            Case 4
+                nodx.ForeColor = vbBlue
+        End Select
+        
+        strBook = rsReqs.Bookmark
+        addChildren tv, nodx, rsReqs, rsReqs!PK_Req
+        rsReqs.Bookmark = strBook
+        
+        rsReqs.FindNext strFind
+    Loop
+End Sub
+
+' ===============================
+' Show details of clicked node
+' ===============================
+Private Sub showNodeDetails(lngID As Long)
+    Dim rs As DAO.Recordset
+    Dim frm As Form
+    
+    Set frm = Forms("TreeView_Example")
+    
+    Set rs = CurrentDb.OpenRecordset( _
+        "SELECT R.PK_Req, R.mem_Req, R.ID_Parent, R.dbi_Sort, R.Req_info, T.tx_Type " & _
+        "FROM tbl_Reqs AS R " & _
+        "LEFT JOIN tbl_Type AS T ON R.ID_Type = T.PK_Type " & _
+        "WHERE R.PK_Req=" & lngID, dbOpenSnapshot)
+    
+    If Not rs.EOF Then
+        frm!txtPK_Req = rs!PK_Req
+        frm!txtMem_Req = rs!mem_Req
+        frm!txtID_Parent = rs!ID_Parent
+        frm!txtDbi_Sort = rs!dbi_Sort
+        frm!txtID_Type = rs!tx_Type
+        frm!txtinfo_Req = rs!Req_info
+    End If
+
+    rs.Close
+End Sub
+  </pre>
+
+  <!-- ==== EXPLANATION SECTION ==== -->
+  <p><strong>شرح الكود للمبتدئين:</strong></p>
+
+  <p>هذا الكود هو جزء من وحدة Module في Access VBA، وهو مسؤول عن <strong>إنشاء وعرض شجرة البيانات (TreeView)</strong> بطريقة منظمة وسهلة. حتى لو لم تفهم التفاصيل البرمجية، الهدف الرئيسي هو أن يوضح لك كيف يتم تنظيم وعرض البيانات بشكل هرمي.</p>
+
+  <h3>1️⃣ الدالة loadTreeView</h3>
+  <p>
+    - تقوم بتحميل كل السجلات من جدول <strong>tbl_Reqs</strong>.<br>
+    - تمسح أي عقد (Nodes) موجودة في TreeView قبل البدء.<br>
+    - تضيف العقد الرئيسية (Root Nodes) في الشجرة.<br>
+    - لكل عقدة رئيسية، تستدعي الدالة <strong>addChildren</strong> لإضافة العناصر الفرعية بشكل متكرر.
+  </p>
+
+  <h3>2️⃣ الدالة addChildren</h3>
+  <p>
+    - هذه دالة <strong>Recursive</strong>، أي أنها تنادي نفسها لإضافة جميع العناصر الفرعية لكل عقدة.<br>
+    - تحدد لون النص أو جعله Bold حسب نوع العنصر (ID_Type).<br>
+    - تضمن أن كل عقدة فرعية لها مفتاح فريد Key بحيث يسهل التمييز بينها.
+  </p>
+
+  <h3>3️⃣ الدالة showNodeDetails</h3>
+  <p>
+    - عند الضغط على أي عقدة في TreeView، هذه الدالة تجلب كل التفاصيل الخاصة بها من قاعدة البيانات.<br>
+    - تعرض المعلومات في النموذج الرئيسي <strong>TreeView_Example</strong>.<br>
+    - تتيح لك مشاهدة أو تعديل أي تفاصيل بسهولة.
+  </p>
+  
+  <h3>🛠 أجزاء يمكنك تعديلها</h3>
+  <p>
+    إليك أبرز الأشياء التي يمكنك تعديلها بأمان لتجربة الكود وفهمه:<br><br>
+    1. <strong>نص العقدة:</strong> يمكنك تغيير القيم في حقل <code>mem_Req</code> في جدول <strong>tbl_Reqs</strong>، وستظهر التغييرات مباشرة في TreeView.<br><br>
+    2. <strong>خط النص:</strong> في الدالة <code>loadTreeView</code>، يمكنك تعديل
+       <code>tv.Nodes.Clear</code> وخصائص <code>Bold</code> و <code>ForeColor</code> لتغيير شكل العقدة.<br><br>
+    3. <strong>أسماء الحقول:</strong> إذا أردت، يمكنك تعديل أسماء الحقول الظاهرة في النموذج <strong>TreeView_Example</strong> لتغيير ما يعرضه <code>showNodeDetails</code>.<br><br>
+    4. <strong>لون النص:</strong> في <code>addChildren</code> يمكنك تغيير قيم <code>vbBlue</code> أو <code>Bold</code> لأي نوع ID_Type تريده.<br><br>
+    5. <strong>ترتيب العناصر:</strong> تعديل الحقل <code>dbi_Sort</code> في الجدول سيؤثر على ترتيب العقد في الشجرة.
+  </p>
+  </div>
+</template>
+
+<!-- JAVASCRIPT FILE -->
+<script src="script.js"></script>
+</body>
+</html>

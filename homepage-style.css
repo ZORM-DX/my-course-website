@@ -1,0 +1,109 @@
+/* Reset & basic */
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f9faff;
+  direction: rtl;
+  color: #333;
+}
+
+/* TOP IMAGE */
+.top-image {
+  width: 100%;
+  height: auto;         /* Let height adjust automatically */
+  padding: 20px 0;      /* Add vertical space around the image */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center;     /* Center vertically */
+  background: #fff;         /* Optional: white background */
+  box-sizing: border-box;   /* Padding included in width */
+  overflow: visible;        /* Prevent clipping */
+}
+
+.top-image img {
+  max-width: 300px;     /* Limit max width so it’s not too big */
+  width: auto;          /* Keep aspect ratio */
+  height: auto;         /* Keep aspect ratio */
+  object-fit: contain;  /* Ensure no distortion */
+  display: block;
+}
+
+
+/* BUTTONS CONTAINER */
+.buttons-container {
+  direction: ltr; /* <-- ADD THIS */
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  gap: 15px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+
+/* COURSE CARD COMMON STYLES */
+.course-card {
+  background: #f3f7ff;
+  border-radius: 14px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  padding: 15px 20px;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  cursor: default;
+  transition: box-shadow 0.3s ease;
+}
+
+.course-card:hover {
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.course-link {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Badge */
+.course-badge {
+  background: #d6e0ff;
+  color: #5459c7;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  align-self: flex-start;
+}
+
+/* Title */
+.course-title {
+  font-weight: 700;
+  font-size: 18px;
+  margin: 10px 0 8px 0;
+  line-height: 1.2em;
+  max-height: 2.4em; /* 2 lines max */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Description */
+.course-desc {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.4em;
+  height: 3.6em; /* 3 lines */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 12px;
+}
+
+/* Footer */
+.course-footer {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}

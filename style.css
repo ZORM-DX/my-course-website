@@ -1,0 +1,161 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f7fb;
+}
+
+/* MAIN LAYOUT */
+.layout {
+  display: flex;
+  height: 100vh;
+}
+
+/* VIDEO AREA */
+/* Make the video/article area have a controlled height */
+.video-area {
+  flex: 1;                     /* fills available space */
+  display: flex;
+  flex-direction: column;      /* allow child fill full height */
+  background: #000;
+  overflow: hidden;            /* keep page from stretching */
+}
+
+/* Make the inner container fill the area and scroll */
+#videoContainer {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;           /* vertical scroll for long articles */
+  overflow-x: hidden;
+}
+
+/* Your article content inside that container */
+.article-content {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+  background: #f9f9f9;
+  color: #1e293b;
+  font-size: 16px;
+  line-height: 1.6em;
+}
+
+/* Make code blocks scroll horizontally so they don’t break layout */
+.article-content pre {
+  background-color: #e5e7eb;
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;          /* horizontal scroll for long lines */
+  white-space: pre;          /* preserve spacing */
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+}
+
+
+/* SIDEBAR (RIGHT SIDE) */
+.sidebar {
+  width: 320px;
+  background: #ffffff;
+  padding: 15px;
+  border-left: 1px solid #ddd;
+  overflow-y: auto;
+}
+
+/* ACCORDION BUTTON */
+.accordion {
+  background-color: #c7d2fe;       /* Deep blue background */
+  color: white;                     /* White text */
+  cursor: pointer;
+  padding: 16px 20px;               /* Bigger padding */
+  width: 100%;
+  text-align: right;                /* Right-aligned text for Arabic */
+  border: none;
+  outline: none;
+  font-size: 20px;                  /* Bigger font */
+  font-weight: 700;                 /* Bold text */
+  border-radius: 10px;              /* Rounded corners */
+  margin-bottom: 8px;               /* Space below each section */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Emoji / icon spacing */
+.accordion::before {
+  content: "";
+  display: inline-block;
+  width: 8px;                       /* Space before emoji/text */
+}
+
+/* Hover effect */
+.accordion:hover {
+  background-color: #3b82f6;        /* Slightly lighter blue */
+  transform: scale(1.02);           /* Subtle pop effect */
+}
+
+/* Optional: active section highlighted */
+.accordion.active {
+  background-color: #2563eb;        /* Even brighter blue when active */
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+
+/* PANEL */
+.panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+  padding-right: 10px;
+}
+
+/* LINKS */
+.panel a {
+  display: block;
+  padding: 8px;
+  text-decoration: none;
+  color: #555;
+  font-size: 14px;
+  text-align: right;
+}
+
+.panel a:hover {
+  color: #0066ff;
+}
+
+.back-button {
+  position: fixed;        /* Fix position relative to viewport */
+  bottom: 20px;           /* 20px from bottom */
+  right: 20px;            /* 20px from right */
+  padding: 10px 16px;
+  background-color: #5459c7;
+  color: white;
+  font-weight: 600;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  z-index: 1000;          /* Make sure it’s above other content */
+}
+
+.back-button:hover {
+  background-color: #4347a0;
+}
+
+.video-link {
+  display: block;             /* Make it full width like a button */
+  padding: 10px 15px;         /* Some space around the text */
+  margin: 6px 0;              /* Space between links */
+  font-size: 16px;            /* Bigger text */
+  font-weight: 600;           /* Bold text */
+  color: #1e40af;             /* Satr-like blue color */
+  background-color: #e0e7ff;  /* Light button background */
+  border-radius: 8px;         /* Rounded corners */
+  text-decoration: none;      /* Remove underline */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.video-link:hover {
+  background-color: #1e40af;  /* Dark blue */
+  color: white !important;     /* Force text to white */
+}
+
+
+
